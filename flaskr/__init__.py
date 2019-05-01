@@ -2,7 +2,7 @@ import os, time, flask, openpyxl, string
 from os.path import join, dirname, realpath
 from openpyxl import load_workbook
 from flask import Flask
-from flask import Blueprint, render_template, request, redirect, url_for, flash, sessions, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import *
 from flask import app
@@ -12,12 +12,17 @@ def create_app():
     #app = Flask(__name__, instance_relative_config=True)
     app = Flask(__name__)
     app.secret_key = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+
+    #16 Megabytes is se maximum file size
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+    db = SQLAlchemy(app)
 
     app.config.from_mapping(
         SECRET_KEY = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9',
-        DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
+        DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
         UPLOADED_FILES = 'files/',
-        UPLOADS_PATH = join(dirname(realpath(__file__)), 'files/')
+        UPLOADS_PATH = join(dirname(realpath(__file__)), 'files/'),
     )
 
     ALLOWED_EXTENSIONS = set(['xlsx'])
@@ -44,14 +49,14 @@ def create_app():
                 if file and allowed_file(filename):
                     file.save(os.path.join(app.config['UPLOADS_PATH'], filename)) 
                 else:
-                    flash(filenamen, 'error')
+                    flash(filenamen, 'fileerror')
                     return render_template('index.html')
 
             session['filenamen[]'] = filenamen
             return render_template('convert.html', filenamen=session['filenamen[]'])    
         else:
-            print ('Geen post?!')
-            return render_template('error.html')
+            flash ('error')
+            return render_template('index.html')
 
     @app.route('/convert', methods=['GET', 'POST'])
     def convert():
@@ -134,7 +139,14 @@ def create_app():
 
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
-        return render_template('index.html', filenamen=session['filenamen[]'])
+
+        return redirect(url_for('uploaded_file', filename=filenaam1))
+        #return render_template('index.html', filenamen=session['filenamen[]'])
+
+    #TODO: dit
+    @app.route('/uploads/<filename>')
+    def uploaded_file(filename):
+        return send_from_directory(app.config['UPLOADS_PATH'], filetouser)
 
     #Dit zorgt er dus voor dat de app uiteindelijk runt, alle gegevens zitten in app
     return app

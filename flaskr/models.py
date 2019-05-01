@@ -1,6 +1,10 @@
-from . import db
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-class User(db.Model):
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db = SQLAlchemy(app)
+
+class TimesVisited(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30))
-    password = db.Column(db.String(30))
+    count = db.Column(db.Integer)

@@ -15,6 +15,13 @@
 
   </head>
   <body>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
+        <a class="navbar-brand" href="">Excel multi tool dingetje </a>
+        <div class="collapse navbar-collapse" id="collapsibleNavId">
+        </div>
+      </nav>
+    </header>
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
@@ -35,9 +42,11 @@
                     </div>
 
                     <div class="form-group">
-                      <label class="float-left"> The file I want to copy values from: </label>
-                      <input type="radio" name="option" id="option1" value="file0" class="form-check-input float-left"> {{ filenamen[0] }}</input>
-                      <input type="radio" name="option" id="option2" value="file1" class="form-check-input float-left"> {{ filenamen[1] }} </input>
+                      <div class="radiobuttons">
+                        <label> I want to copy the data from: </label>
+                        <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0" class="form-check-input radio"> {{ filenamen[0] }}</input> </div>
+                        <div class="radiobutton"> <input type="radio" name="option" id="option2" value="file1" class="form-check-input radio"> {{ filenamen[1] }} </input> </div>
+                      </div>
                     </div>
 
                     <div class="form-group">
@@ -49,7 +58,7 @@
                       <label class="float-left"> To column: </label>
                       <input type="number" name="column2copy" class="form-control">
                     </div>
-                    <input type="submit" class="float-left">
+                    <input type="submit" class="btn btn-primary float-left" value="Submit">
                 </form>
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">

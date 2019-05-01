@@ -15,6 +15,14 @@
 
   </head>
   <body>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
+          <a class="navbar-brand" href="">Excel multi tool dingetje </a>
+          <div class="collapse navbar-collapse" id="collapsibleNavId">
+
+          </div>
+      </nav>
+    </header>
     <div class="container-fluid">
           <div class="row">
               <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
@@ -22,8 +30,8 @@
               <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
                 <p> Currently only .xlsx files are supported, please save your file in that format. </p>
                   <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
-                      <input type="file" name="uploadedfiles" multiple="">
-                      <input type="submit">
+                      <input type="file" name="uploadedfiles" multiple="" class="btn btn-link">
+                      <input type="submit" class="btn btn-primary" value="Upload"> 
                   </form>
               </div>
               <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
@@ -61,20 +69,31 @@
               {% endif %}
             {% endwith %}
 
-            <!-- Voor de error messages-->
-            {% with error = get_flashed_messages(category_filter=["error"]) %}
+            <!-- Voor de invalid file messages-->
+            {% with fileerror = get_flashed_messages(category_filter=["fileerror"]) %}
               {% if error %}
               <div class="alert-message block-message error">
                 <ul>
-                {%- for msg in error %}
+                {%- for msg in fileerror %}
                   <p> Please upload a .xlsx file, one or more of the uploaded files are not supported: {{ msg }} </p>
                 {% endfor -%}
                 </ul>
               </div>
               {% endif %}
             {% endwith %}
-            <!-- Counter moet nog geinstalleerd worden: https://github.com/brentvollebregt/hit-counter -->
-            <img class="img-fluid" src="https://hitcounter.pythonanywhere.com/nocount/tag.svg" alt="Hits">
+
+            <!-- Voor de invalid file messages-->
+            {% with error = get_flashed_messages(category_filter=["error"]) %}
+              {% if error %}
+              <div class="alert-message block-message error">
+                <ul>
+                {%- for msg in error %}
+                  <p> You visited the page from somewhere else, or something went horribly wrong. </p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>

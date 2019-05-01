@@ -1,0 +1,17 @@
+.radiobuttons
+{
+  height: 5em;
+  width: 100%;
+}
+
+.radiobutton
+{
+  width: 100%;
+  height: 40%;
+  padding-left: 3.5%;
+}
+
+.form-group label
+{
+  width: 100%;
+}
