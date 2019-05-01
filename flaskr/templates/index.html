@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% extends 'base.html' %}
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -10,24 +9,76 @@
     <meta name="author" content="">
 
     <title> Excel tool </title>
-    
-    {% block css %}
-      {{ super() }}
-    {% endblock %}
-  </head>
 
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+
+  </head>
   <body>
-    {% block body %}
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class=flashes>
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
-    {{ super() }}
-    {% endblock %}
+    <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+              </div>
+              <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+                <p> Currently only .xlsx files are supported, please save your file in that format. </p>
+                  <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
+                      <input type="file" name="uploadedfiles" multiple="">
+                      <input type="submit">
+                  </form>
+              </div>
+              <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            <!-- Voor de time message -->
+            {% with time = get_flashed_messages(category_filter=["time"]) %}
+              {% if time %}
+              <div class="alert-message block-message time">
+                <ul>
+                {%- for msg in time %}
+                  <p> The program took: {{ msg }} seconds to complete this request</p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- Voor de loop message-->
+            {% with loops = get_flashed_messages(category_filter=["loops"]) %}
+              {% if loops %}
+              <div class="alert-message block-message loops">
+                <ul>
+                {%- for msg in loops %}
+                  <p> The program went through {{ msg }} iterations </p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- Voor de error messages-->
+            {% with error = get_flashed_messages(category_filter=["error"]) %}
+              {% if error %}
+              <div class="alert-message block-message error">
+                <ul>
+                {%- for msg in error %}
+                  <p> Please upload a .xlsx file, one or more of the uploaded files are not supported: {{ msg }} </p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+            <!-- Counter moet nog geinstalleerd worden: https://github.com/brentvollebregt/hit-counter -->
+            <img class="img-fluid" src="https://hitcounter.pythonanywhere.com/nocount/tag.svg" alt="Hits">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+          </div>
+      </div>
   </body>
 </html>

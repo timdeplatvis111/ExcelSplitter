@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> ye </title>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+
+  </head>
+  <body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+                <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/convert">
+                    <p> This is a very early development version, the program can currently only match values that are exactly alike for example the K numbers </p>
+                    <p> The column number has to be an interger, this'll probably get changed soon. </p>
+
+                    <div class="form-group">
+                      <label class="float-left"> I want to match the values from the given collumn number in file: {{ filenamen[0] }} </label>
+                      <input type="number" name="column1" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="float-left"> I want to match the values from the given collumn number in file: {{ filenamen[1] }} </label>
+                      <input type="number" name="column2" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="float-left"> The file I want to copy values from: </label>
+                      <input type="radio" name="option" id="option1" value="file0" class="form-check-input float-left"> {{ filenamen[0] }}</input>
+                      <input type="radio" name="option" id="option2" value="file1" class="form-check-input float-left"> {{ filenamen[1] }} </input>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="float-left"> I want to copy the values from column: </label>
+                      <input type="number" name="column1copy" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="float-left"> To column: </label>
+                      <input type="number" name="column2copy" class="form-control">
+                    </div>
+                    <input type="submit" class="float-left">
+                </form>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
