@@ -134,6 +134,7 @@ def create_app():
                         else:
                             loops += 1
 
+            #VERGEET DIT NIET TE VERANDEREN
             workbook1.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
             workbook2.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
             elapsed_time = time.process_time() - t
