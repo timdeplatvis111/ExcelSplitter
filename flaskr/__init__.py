@@ -66,8 +66,8 @@ def create_app():
             filenaam1 = filenamen[0]
             filenaam2 = filenamen[1]
 
-            workbook1 = load_workbook(filename=f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
-            workbook2 = load_workbook(filename=f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
+            workbook1 = load_workbook(filename=f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam1}')
+            workbook2 = load_workbook(filename=f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam2}')
 
             column1 = request.form['column1']
             column2 = request.form['column2']
@@ -135,8 +135,8 @@ def create_app():
                             loops += 1
 
             #VERGEET DIT NIET TE VERANDEREN
-            workbook1.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
-            workbook2.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
+            workbook1.save(f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam1}')
+            workbook2.save(f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam2}')
             elapsed_time = time.process_time() - t
 
             flash(elapsed_time, 'time')
