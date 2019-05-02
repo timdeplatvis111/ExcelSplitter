@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> Excel tool </title>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
+          <a class="navbar-brand" href="">Excel multi tool dingetje </a>
+          <div class="collapse navbar-collapse" id="collapsibleNavId">
+
+          </div>
+      </nav>
+    </header>
+    <div class="container-fluid">
+          <div class="row">
+              <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+              </div>
+              <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+                <p> Currently only .xlsx files are supported, please save your file in that format. </p>
+                  <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
+                      <input type="file" name="uploadedfiles" multiple="" class="btn btn-link">
+                      <input type="submit" class="btn btn-primary" value="Upload"> 
+                  </form>
+              </div>
+              <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            <!-- Voor de time message -->
+            {% with time = get_flashed_messages(category_filter=["time"]) %}
+              {% if time %}
+              <div class="alert-message block-message time">
+                <ul>
+                {%- for msg in time %}
+                  <p> The program took: {{ msg }} seconds to complete this request</p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- Voor de loop message-->
+            {% with loops = get_flashed_messages(category_filter=["loops"]) %}
+              {% if loops %}
+              <div class="alert-message block-message loops">
+                <ul>
+                {%- for msg in loops %}
+                  <p> The program went through {{ msg }} iterations </p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- Voor de invalid file messages-->
+            {% with fileerror = get_flashed_messages(category_filter=["fileerror"]) %}
+              {% if error %}
+              <div class="alert-message block-message error">
+                <ul>
+                {%- for msg in fileerror %}
+                  <p> Please upload a .xlsx file, one or more of the uploaded files are not supported: {{ msg }} </p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+
+            <!-- Voor de invalid file messages-->
+            {% with error = get_flashed_messages(category_filter=["error"]) %}
+              {% if error %}
+              <div class="alert-message block-message error">
+                <ul>
+                {%- for msg in error %}
+                  <p> You visited the page from somewhere else, or something went horribly wrong. </p>
+                {% endfor -%}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+          </div>
+      </div>
+  </body>
+</html>
