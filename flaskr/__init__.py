@@ -14,10 +14,15 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9'
 
-    app.config['MYSQL_HOST'] = 'Timdeplatvis111.mysql.pythonanywhere-services.com'
-    app.config['MYSQL_USER'] = 'Timdeplatvis111'
-    app.config['MYSQL_PASSWORD'] = 'CdYudQM75q7DxHh'
-    app.config['MYSQL_DB'] = 'Timdeplatvis111$Splitter'
+    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = ''
+    app.config['MYSQL_DB'] = 'Splitter'
+
+    #app.config['MYSQL_HOST'] = 'Timdeplatvis111.mysql.pythonanywhere-services.com'
+    #app.config['MYSQL_USER'] = 'Timdeplatvis111'
+    #app.config['MYSQL_PASSWORD'] = 'CdYudQM75q7DxHh'
+    #app.config['MYSQL_DB'] = 'Timdeplatvis111$Splitter'
 
     mysql = MySQL(app)
 
@@ -92,8 +97,8 @@ def create_app():
             filenaam1 = filenamen[0]
             filenaam2 = filenamen[1]
 
-            workbook1 = load_workbook(filename=f'/flaskr/files/{filenaam1}')
-            workbook2 = load_workbook(filename=f'/flaskr/files/{filenaam2}')
+            workbook1 = load_workbook(filename=f'/files/{filenaam1}')
+            workbook2 = load_workbook(filename=f'/files/{filenaam2}')
 
             column1 = request.form['column1']
             column2 = request.form['column2']
@@ -161,8 +166,8 @@ def create_app():
                             loops += 1
 
             #VERGEET DIT NIET TE VERANDEREN
-            workbook1.save(f'/flaskr/files/{filenaam1}')
-            workbook2.save(f'/flaskr/files/{filenaam2}')
+            workbook1.save(f'/files/{filenaam1}')
+            workbook2.save(f'/files/{filenaam2}')
             elapsed_time = time.process_time() - t
 
             flash(elapsed_time, 'time')
