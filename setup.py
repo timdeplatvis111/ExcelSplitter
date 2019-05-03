@@ -1,4 +1,9 @@
 from setuptools import setup
+from app import app 
+
+app.run(
+    debug = True
+)
 
 setup(
     name='flaskr',
