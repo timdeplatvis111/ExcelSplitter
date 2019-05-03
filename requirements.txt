@@ -53,3 +53,4 @@ wikipedia==1.4.0
 wrapt==1.11.1
 yarl==1.1.1
 yolk3k==0.9
+gunicorn==19.9.0
