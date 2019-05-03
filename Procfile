@@ -1,1 +1,1 @@
-web: gunicorn excelapp:app
+web: gunicorn app:app
