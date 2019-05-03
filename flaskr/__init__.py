@@ -183,7 +183,9 @@ def create_app():
     #TODO: dit
     @app.route('/uploads/<filename>')
     def uploaded_file(filename):
-        return send_from_directory(app.config['UPLOADS_PATH'], filetouser)
+        #return send_from_directory(app.config['UPLOADS_PATH'], filetouser)
+        return redirect("/")
+        return render_template('index.html')
 
     #Dit zorgt er dus voor dat de app uiteindelijk runt, alle gegevens zitten in app
     return app
