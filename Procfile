@@ -1,1 +1,1 @@
-web: gunicorn excelapp --log-file=-
+web: gunicorn excelapp:app
