@@ -6,7 +6,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import *
-from flask import app
+#from flask import app
 
 def create_app():
     # create and configure the app
@@ -14,15 +14,15 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9'
 
-    #app.config['MYSQL_HOST'] = 'localhost'
-    #app.config['MYSQL_USER'] = 'root'
-    #app.config['MYSQL_PASSWORD'] = ''
-    #app.config['MYSQL_DB'] = 'Splitter'
+    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = ''
+    app.config['MYSQL_DB'] = 'Splitter'
 
-    app.config['MYSQL_HOST'] = 'Timdeplatvis111.mysql.pythonanywhere-services.com'
-    app.config['MYSQL_USER'] = 'Timdeplatvis111'
-    app.config['MYSQL_PASSWORD'] = 'CdYudQM75q7DxHh'
-    app.config['MYSQL_DB'] = 'Timdeplatvis111$Splitter'
+    #app.config['MYSQL_HOST'] = 'Timdeplatvis111.mysql.pythonanywhere-services.com'
+    #app.config['MYSQL_USER'] = 'Timdeplatvis111'
+    #app.config['MYSQL_PASSWORD'] = 'CdYudQM75q7DxHh'
+    #app.config['MYSQL_DB'] = 'Timdeplatvis111$Splitter'
 
     mysql = MySQL(app)
 
@@ -189,5 +189,8 @@ def create_app():
 
     #Dit zorgt er dus voor dat de app uiteindelijk runt, alle gegevens zitten in app
     return app
+    app.run(
+    debug = True
+)
 
 

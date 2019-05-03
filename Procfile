@@ -1,1 +1,1 @@
-web: gunicorn setup:flaskr --log-file=-
+web: gunicorn excelapp:flaskr --log-file=-

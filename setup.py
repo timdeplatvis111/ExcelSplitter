@@ -1,18 +1,18 @@
 from setuptools import setup
-from app import app 
+#from flask import app
 
-app.run(
-    debug = True
-)
+#app.run(
+#    debug = True
+#)
 
-setup(
-    name='flaskr',
-    packages=['flaskr'],
-    include_package_data=True,
-    install_requires=[
-        'flask',
-        'flask_mysqldb',
-        'flask_sqlalchemy',
-        'openpyxl',
-    ],
-)
+#setup(
+#    name='flaskr',
+#    packages=['flaskr'],
+#    include_package_data=True,
+#    install_requires=[
+#        'flask',
+#        'flask_mysqldb',
+#        'flask_sqlalchemy',
+#        'openpyxl'
+#    ],
+#)
