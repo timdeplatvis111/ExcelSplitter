@@ -3,6 +3,7 @@ from os.path import join, dirname, realpath
 from openpyxl import load_workbook
 from flask import Flask
 from flask import Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory
+from flask_mysqldb import MySQL
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import *
 from flask import app
@@ -12,15 +13,19 @@ def create_app():
     #app = Flask(__name__, instance_relative_config=True)
     app = Flask(__name__)
     app.secret_key = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+
+    app.config['MYSQL_HOST'] = 'localhost'
+    app.config['MYSQL_USER'] = 'root'
+    app.config['MYSQL_PASSWORD'] = ''
+    app.config['MYSQL_DB'] = 'Splitter'
+
+    mysql = MySQL(app)
 
     #16 Megabytes is se maximum file size
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
-    db = SQLAlchemy(app)
 
     app.config.from_mapping(
         SECRET_KEY = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9',
-        DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
         UPLOADED_FILES = 'files/',
         UPLOADS_PATH = join(dirname(realpath(__file__)), 'files/'),
     )
@@ -32,7 +37,27 @@ def create_app():
 
     @app.route('/')
     def index():
-        return render_template('index.html')
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM post")
+        posts = cur.fetchall()
+        return render_template('index.html', posts=posts)
+
+    @app.route('/feedback', methods=['POST', 'GET'])
+    def feedback():
+        try: 
+            username = request.form['username']
+            content = request.form['content']
+
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO post(username, content) VALUES (%s, %s)", (username, content))
+            mysql.connection.commit()
+            cur.close()
+            flash ("Done")
+            return redirect("/")
+            return render_template('index.html')
+        except:
+            return redirect("/")
+            return render_template('index.html')
 
     @app.route('/upload', methods=['POST', 'GET'])
     def upload():
@@ -56,6 +81,7 @@ def create_app():
             return render_template('convert.html', filenamen=session['filenamen[]'])    
         except KeyError:
             flash ('error')
+            return redirect("/")
             return render_template('index.html')
 
     @app.route('/convert', methods=['GET', 'POST'])
@@ -66,8 +92,8 @@ def create_app():
             filenaam1 = filenamen[0]
             filenaam2 = filenamen[1]
 
-            workbook1 = load_workbook(filename=f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam1}')
-            workbook2 = load_workbook(filename=f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam2}')
+            workbook1 = load_workbook(filename=f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
+            workbook2 = load_workbook(filename=f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
 
             column1 = request.form['column1']
             column2 = request.form['column2']
@@ -135,8 +161,8 @@ def create_app():
                             loops += 1
 
             #VERGEET DIT NIET TE VERANDEREN
-            workbook1.save(f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam1}')
-            workbook2.save(f'C:/Users/timde/Desktop/ExcelSplitter-master/flaskr/files/{filenaam2}')
+            workbook1.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
+            workbook2.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
             elapsed_time = time.process_time() - t
 
             flash(elapsed_time, 'time')
@@ -146,6 +172,7 @@ def create_app():
             #return render_template('index.html', filenamen=session['filenamen[]'])
 
         except:
+            return redirect("/")
             return render_template('index.html')
             
     #TODO: dit

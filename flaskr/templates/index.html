@@ -98,6 +98,38 @@
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
           </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+              <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/feedback">
+                <div class="form-group">
+                  <label for="naamForm"> Name </label>
+                  <input type="text" name="username" id="naamForm" class="form-control mb-4">
+                  <label for="textForm"> Your message </label>
+                  <textarea class="form-control mb-4" id="textForm" name="content" rows="3"></textarea>
+                  <input type="submit" class="btn btn-primary" value="Upload"> 
+                </div>
+              </form>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            <h2> Feedback corner </h2>
+            {% for username in posts %}
+              <p> User: {{username[1]}} </p>
+              <p> Says: </p>
+              <p> {{username[2]}} </p>
+              <br>
+            {% endfor %}
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+          </div>
       </div>
   </body>
 </html>
