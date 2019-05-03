@@ -1,1 +1,1 @@
-web: gunicorn flaskr:excelapp --log-file=-
+web: gunicorn excelapp --log-file=-
