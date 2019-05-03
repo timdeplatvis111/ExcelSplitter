@@ -1,1 +1,1 @@
-web: gunicorn app:flaskr --log-file=-
+web: gunicorn flaskr:app --log-file=-
