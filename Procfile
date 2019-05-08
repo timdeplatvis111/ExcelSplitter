@@ -1,1 +1,1 @@
-web: gunicorn excelreplacer
+web: gunicorn flaskr
