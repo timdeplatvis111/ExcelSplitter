@@ -31,8 +31,8 @@ def create_app():
 
     app.config.from_mapping(
         SECRET_KEY = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9',
-        UPLOADED_FILES = 'files/',
-        UPLOADS_PATH = join(dirname(realpath(__file__)), 'files/'),
+        UPLOADED_FILES = '/files/',
+        UPLOADS_PATH = join(dirname(realpath(__file__)), '/files/'),
     )
 
     ALLOWED_EXTENSIONS = set(['xlsx'])
