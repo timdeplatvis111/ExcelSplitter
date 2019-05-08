@@ -25,7 +25,8 @@ def create_app(test_config=None):
     )
 
     #Database stuff
-    conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
+    conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
+    #conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
 
     #Zet de maximum allowed file size naar 16 MB
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -35,8 +36,11 @@ def create_app(test_config=None):
 
     app.register_blueprint(excelreplacer.bp)
 
-    port = int(os.environ.get("PORT", 5000))
+    #port = int(os.environ.get("PORT", 5000))
+    if __name__ == '__main__':
+        app.run()
     return app
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)
+#if __name__ == '__main__':
+    #app.run()
+    #app.run(host='0.0.0.0', port=port, debug=True)
