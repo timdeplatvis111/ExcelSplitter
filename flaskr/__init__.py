@@ -5,7 +5,6 @@ from flask import Flask
 from flask import Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import *
-from flask_mysqldb import MySQL
 from flaskr import excelreplacer
 
 def create_app(test_config=None):
