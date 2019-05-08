@@ -159,14 +159,9 @@ def convert():
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
 
-        return redirect(url_for('uploaded_file', filename=filenaam1))
-        #return render_template('index.html', filenamen=session['filenamen[]'])
+        #return redirect(url_for('uploaded_file', filename=filenaam1))
+        return render_template('index.html', filenamen=session['filenamen[]'])
 
     #except:
         #return redirect("/")
         #return render_template('index.html')
-
-    #Voor Heroku?
-app.run (
-debug = True
-)
