@@ -16,7 +16,8 @@ app.config.from_mapping(
     UPLOADS_PATH = join(dirname(realpath(__file__)), 'files/'),
 )
 
-conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
+#conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
+conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
 
 ALLOWED_EXTENSIONS = set(['xlsx'])
 def allowed_file(filename):
