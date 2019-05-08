@@ -1,1 +1,1 @@
-web: gunicorn flaskr:setup.py
+web: gunicorn flaskr
