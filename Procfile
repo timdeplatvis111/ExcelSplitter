@@ -1,1 +1,1 @@
-web: gunicorn flaskr:excelreplacer
+web: gunicorn flask run
