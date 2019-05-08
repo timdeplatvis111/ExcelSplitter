@@ -35,8 +35,8 @@ def create_app(test_config=None):
 
     app.register_blueprint(excelreplacer.bp)
 
+    port = int(os.environ.get("PORT", 5000))
+
     return app
 
-    app.run (
-    debug = True
-    )
+app.run(host='0.0.0.0', port=port, debug=True)
