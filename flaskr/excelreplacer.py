@@ -165,3 +165,8 @@ def convert():
     #except:
         #return redirect("/")
         #return render_template('index.html')
+
+    #Voor Heroku?
+    app.run (
+    debug = True
+    )
