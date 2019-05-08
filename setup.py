@@ -1,18 +1,5 @@
-from setuptools import setup
-#from flask import app
+from flask import Flask
+from flaskr import excelreplacer
 
-#app.run(
-#    debug = True
-#)
-
-#setup(
-#    name='flaskr',
-#    packages=['flaskr'],
-#    include_package_data=True,
-#    install_requires=[
-#        'flask',
-#        'flask_mysqldb',
-#        'flask_sqlalchemy',
-#        'openpyxl'
-#    ],
-#)
+if __name__ == '__main__':
+    app.run()
