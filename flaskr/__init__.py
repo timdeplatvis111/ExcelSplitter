@@ -12,6 +12,7 @@ def create_app(test_config=None):
 
     #Configuration settings voor app
     app.config.from_mapping(
+
     #Super secret key, randomly generated door Timbot
     SECRET_KEY = b'5t759f9$gfdhf0478y87^4#5gq8*3nft8503#mgtrhsuooer9',
 
@@ -33,13 +34,15 @@ def create_app(test_config=None):
     #db.init_app(app)
     #mysql = MySQL(app)
 
+    #Maakt een blueprint voor Excelreplacer
     app.register_blueprint(excelreplacer.bp)
 
+    #Runt de app, dit is voor als de webapp uiteindelijk online gezet wordt
     #port = int(os.environ.get("PORT", 5000))
     if __name__ == '__main__':
         app.run()
     return app
 
-if __name__ == '__main__':
-    app.run()
+#if __name__ == '__main__':
+     #app.run()
     #app.run(host='0.0.0.0', port=port, debug=True)

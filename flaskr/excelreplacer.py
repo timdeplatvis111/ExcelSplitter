@@ -77,7 +77,7 @@ def upload():
 
 @bp.route('/convert', methods=['GET', 'POST'])
 def convert():
-    #try:
+    try:
         filenamen = session.get('filenamen[]')
 
         filenaam1 = filenamen[0]
@@ -151,7 +151,7 @@ def convert():
                     else:
                         loops += 1
 
-        #VERGEET DIT NIET TE VERANDEREN
+        #Saved de 2 aangepaste files terug naar de /files/ folder
         workbook1.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
         workbook2.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
         elapsed_time = time.process_time() - t
@@ -162,7 +162,7 @@ def convert():
         #return redirect(url_for('uploaded_file', filename=filenaam1))
         return render_template('index.html', filenamen=session['filenamen[]'])
 
-    #except:
-        #return redirect("/")
-        #return render_template('index.html')
+    except:
+        return redirect("/")
+        return render_template('index.html')
 
