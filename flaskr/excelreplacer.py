@@ -9,11 +9,15 @@ from werkzeug.utils import *
 #Register de blueprint zodat de __init__.py werkt met de module
 bp = Blueprint('excelreplacer', __name__)
 
-UPLOADED_FILES = 'files/',
-UPLOADS_PATH = join(dirname(realpath(__file__)), 'files/'),
+app = Flask(__name__)
 
-#conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
-conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
+app.config.from_mapping(
+    UPLOADED_FILES = f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/',
+    UPLOADS_PATH = join(dirname(realpath(__file__)), f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/'),
+)
+
+conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
+#conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
 
 ALLOWED_EXTENSIONS = set(['xlsx'])
 def allowed_file(filename):
@@ -47,7 +51,7 @@ def feedback():
 
 @bp.route('/upload', methods=['POST', 'GET'])
 def upload():
-    try: 
+    #try: 
         request.files['uploadedfiles']
         yeet = request.files.getlist('uploadedfiles')
         filenamen = []
@@ -66,10 +70,10 @@ def upload():
 
         session['filenamen[]'] = filenamen
         return render_template('convert.html', filenamen=session['filenamen[]'])    
-    except KeyError:
-        flash ('error')
-        return redirect("/")
-        return render_template('index.html')
+    #except KeyError:
+        #flash ('error')
+        #return redirect("/")
+        #return render_template('index.html')
 
 @bp.route('/convert', methods=['GET', 'POST'])
 def convert():
