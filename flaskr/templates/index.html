@@ -28,7 +28,7 @@
               <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
               </div>
               <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
-                <p> Currently only .xlsx files are supported, please save your file in that format. </p>
+                <p> Currently only .xlsx files are supported </p>
                   <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
                       <input type="file" name="uploadedfiles" multiple="" class="btn btn-link">
                       <input type="submit" class="btn btn-primary" value="Upload"> 
@@ -47,11 +47,9 @@
             {% with time = get_flashed_messages(category_filter=["time"]) %}
               {% if time %}
               <div class="alert-message block-message time">
-                <ul>
                 {%- for msg in time %}
                   <p> The program took: {{ msg }} seconds to complete this request</p>
                 {% endfor -%}
-                </ul>
               </div>
               {% endif %}
             {% endwith %}
@@ -60,39 +58,31 @@
             {% with loops = get_flashed_messages(category_filter=["loops"]) %}
               {% if loops %}
               <div class="alert-message block-message loops">
-                <ul>
                 {%- for msg in loops %}
                   <p> The program went through {{ msg }} iterations </p>
                 {% endfor -%}
-                </ul>
               </div>
               {% endif %}
             {% endwith %}
 
             <!-- Voor de invalid file messages-->
             {% with fileerror = get_flashed_messages(category_filter=["fileerror"]) %}
-              {% if error %}
+              {% if fileerror %}
               <div class="alert-message block-message error">
-                <ul>
                 {%- for msg in fileerror %}
-                  <p> Please upload a .xlsx file, one or more of the uploaded files are not supported: {{ msg }} </p>
+                  <p> Please upload an .xlsx file, other Excel filetypes like .cvs are not currently supported  </p>
                 {% endfor -%}
-                </ul>
               </div>
               {% endif %}
             {% endwith %}
 
             <!-- Voor de invalid file messages-->
             {% with error = get_flashed_messages(category_filter=["error"]) %}
-              {% if error %}
               <div class="alert-message block-message error">
-                <ul>
                 {%- for msg in error %}
-                  <p> You visited the page from somewhere else, or something went horribly wrong. </p>
+                  <p> Something went wrong, please contact the administrator. Be sure to copy this error: {{ msg }} </p>
                 {% endfor -%}
-                </ul>
               </div>
-              {% endif %}
             {% endwith %}
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
@@ -119,13 +109,15 @@
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
-            <h2> Feedback corner </h2>
-            {% for username in posts %}
-              <p> User: {{username[1]}} </p>
-              <p> Says: </p>
-              <p> {{username[2]}} </p>
-              <br>
-            {% endfor %}
+            {% if posts %}
+                <h2> Feedback corner </h2>
+                {% for username in posts %}
+                    <p> User: {{username[1]}} </p>
+                    <p> Says: </p>
+                    <p> {{username[2]}} </p>
+                    <br>
+                {% endfor %}
+            {% endif %}
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
