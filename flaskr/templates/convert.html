@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,19 +9,25 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title> ye </title>
+    <title> Converting </title>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"> </script>
 
-  </head>
-  <body>
+</head>
+
+<body>
     <header>
-      <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
-        <a class="navbar-brand" href="">Excel multi tool dingetje </a>
-        <div class="collapse navbar-collapse" id="collapsibleNavId">
-        </div>
-      </nav>
+        <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
+            <a class="navbar-brand" href="">Excel multi tool dingetje </a>
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+            </div>
+            <a class="nav-item float-right" data-toggle="modal" data-target="loginregistermodal"> </a>
+        </nav>
     </header>
     <div class="container-fluid">
         <div class="row">
@@ -28,35 +35,40 @@
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
                 <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/convert">
-                    <p> This is a very early development version, the program can currently only match values that are exactly alike for example the K numbers </p>
+                    <p> This is a very early development version, the program can currently only match values that are
+                        exactly alike for example the K numbers </p>
                     <p> The column number has to be an interger, this'll probably get changed soon. </p>
 
                     <div class="form-group">
-                      <label class="float-left"> I want to match the values from the given collumn number in file: {{ filenamen[0] }} </label>
-                      <input type="number" name="column1" class="form-control">
+                        <label class="float-left"> I want to match the values from the given collumn number in file:
+                            {{ filenamen[0] }} </label>
+                        <input type="number" name="column1" class="form-control">
                     </div>
 
                     <div class="form-group">
-                      <label class="float-left"> I want to match the values from the given collumn number in file: {{ filenamen[1] }} </label>
-                      <input type="number" name="column2" class="form-control">
+                        <label class="float-left"> I want to match the values from the given collumn number in file:
+                            {{ filenamen[1] }} </label>
+                        <input type="number" name="column2" class="form-control">
                     </div>
 
                     <div class="form-group">
-                      <div class="radiobuttons">
-                        <label> I want to copy the data from: </label>
-                        <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0" class="form-check-input radio"> {{ filenamen[0] }}</input> </div>
-                        <div class="radiobutton"> <input type="radio" name="option" id="option2" value="file1" class="form-check-input radio"> {{ filenamen[1] }} </input> </div>
-                      </div>
+                        <div class="radiobuttons">
+                            <label> I want to copy the data from: </label>
+                            <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0"
+                                    class="form-check-input radio"> {{ filenamen[0] }}</input> </div>
+                            <div class="radiobutton"> <input type="radio" name="option" id="option2" value="file1"
+                                    class="form-check-input radio"> {{ filenamen[1] }} </input> </div>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                      <label class="float-left"> I want to copy the values from column: </label>
-                      <input type="number" name="column1copy" class="form-control">
+                        <label class="float-left"> I want to copy the values from column: </label>
+                        <input type="number" name="column1copy" class="form-control">
                     </div>
 
                     <div class="form-group">
-                      <label class="float-left"> To column: </label>
-                      <input type="number" name="column2copy" class="form-control">
+                        <label class="float-left"> To column: </label>
+                        <input type="number" name="column2copy" class="form-control">
                     </div>
                     <input type="submit" class="btn btn-primary float-left" value="Submit">
                 </form>
@@ -65,5 +77,6 @@
             </div>
         </div>
     </div>
-  </body>
+</body>
+
 </html>

@@ -1,4 +1,4 @@
-import os, time, flask, string, MySQLdb
+import os, time, flask, string, MySQLdb, sqlalchemy, bcrypt
 
 from os.path import join, dirname, realpath
 from flask import Flask
@@ -12,6 +12,9 @@ from werkzeug.utils import *
 #Good luck bij dit bedrijf ouwe, ik vond mijn stage best leuk. 
 
 app = Flask(__name__)
+
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 ALLOWED_EXTENSIONS = set(['xlsx'])
 def allowed_file(filename):

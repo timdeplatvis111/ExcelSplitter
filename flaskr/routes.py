@@ -1,4 +1,4 @@
-import os, time, flask, string, MySQLdb, openpyxl
+import os, time, flask, string, MySQLdb, openpyxl, wtforms
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory, send_file
 from flaskr import app, conn, allowed_file
 from os.path import join, dirname, realpath
@@ -8,17 +8,28 @@ from openpyxl import load_workbook
 from werkzeug.wrappers import BaseRequest
 from werkzeug.wsgi import responder
 from werkzeug.exceptions import HTTPException, NotFound
+from forms import RegistrationForm, LoginForm
+from wtforms import form
 
 #Variables voor de exception catchers, moeten eerst een value hebben for some reason
 a, b, c, d = '', '', '', ''
 
-@app.route('/')
+#TODO: Dit even uncommenten nog  
+#{{ form.remember(class="form-check-input") }}
+#{{ form.remember.label(class="form-check-label") }} 
+
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM post")
     posts = cursor.fetchall()
 
-    return render_template('index.html', posts=posts)
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash (f'Account created for: {form.username.data}!', 'succes')
+        return redirect(url_for('home'))
+    return render_template('index.html', posts=posts, form=form)
     session.pop('_flashes', None)
 
 @app.route('/feedback', methods=['POST', 'GET'])
