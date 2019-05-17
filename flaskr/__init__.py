@@ -1,9 +1,13 @@
-import os, time, flask, string, MySQLdb, sqlalchemy, bcrypt
+import os, time, flask, string, MySQLdb, sqlalchemy, flask_bcrypt
+
+from flask_bcrypt import Bcrypt
 
 from os.path import join, dirname, realpath
-from flask import Flask
-from flask import Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory
+
+from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+
 from werkzeug.utils import *
 
 #Voor het persoon die, heel misschien ooit, deze code zal vinden en er mee moet werken:
@@ -12,9 +16,6 @@ from werkzeug.utils import *
 #Good luck bij dit bedrijf ouwe, ik vond mijn stage best leuk. 
 
 app = Flask(__name__)
-
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 
 ALLOWED_EXTENSIONS = set(['xlsx'])
 def allowed_file(filename):
@@ -28,11 +29,15 @@ app.config.from_mapping(
     DEBUG = 'true',
     DEBUG_MODE = 'true',
     FLASK_ENV= 'development',
-    conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
+    #conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
 )
 
-conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
+#Dit was voor het legacy database systeem, wordt even bewaard voor als het nieuwe systeem niet werkt 
+#conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
 #conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
+
+#Connect naar de MYsql database met flask sqlalchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yeet@localhost/splitter'
 
 #Zet de maximum allowed file size naar 16 MB
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -42,6 +47,13 @@ app.config['DEBUG_MODE'] = True
 
 #Zet de enviroment naar development, moet uit in de live version
 app.config['FLASK_ENV'] = 'development'
+
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
+
+db = SQLAlchemy(app)
+bcrypt = Bcrypt(app)
 
 from flaskr import routes
 

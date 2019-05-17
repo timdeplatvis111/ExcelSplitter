@@ -1,0 +1,13 @@
+<!-- Codesave line 1-->
+<div class="form-group">
+{{ accountform.picture.label() }}
+{{ accountform.picture(class="form-control-file") }}
+{% if accountform.picture.errors %}
+{% for error in accountform.picture.errors %}
+<span class="text-danger">{{ error }}</span></br>
+{% endfor %}
+{% endif %}
+</div>
+
+<!-- Codesave  line 12 -->
+<img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">

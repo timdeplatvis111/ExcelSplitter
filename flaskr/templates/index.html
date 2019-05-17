@@ -28,13 +28,22 @@ Also even de layour fixen, er zitten nu blank spaces op de page
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
             <a class="navbar-brand" href="">Excel multi tool dingetje </a>
+
+            <p> {% if current_user.is_authenticated %} </p>
+            <div class="navbar-login ml-auto mr-4">
+                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#accountModal">
+                    {{ current_user.username }} </button>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+            {% else %}
             <div class="navbar-login ml-auto mr-4">
                 <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#loginModal">
                     Please login/register here! </button>
             </div>
+            {% endif %}
         </nav>
     </header>
-    <!-- Modal -->
+    <!-- Login/register modal -->
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -48,71 +57,72 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 <div class="modal-body">
                     <div class="tabbable">
                         <ul class="nav nav-tabs">
-                            <li class="nav-item active"><a class="nav-link active" href="#tab1" data-toggle="tab">Register</a></li>
+                            <li class="nav-item active"><a class="nav-link active" href="#tab1"
+                                    data-toggle="tab">Register</a></li>
                             <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Login</a></li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tab1">
                                 <div class="content-section">
                                     <form method="POST" action="">
-                                        {{ form.hidden_tag() }}
+                                        {{ registerform.hidden_tag() }}
                                         <fieldset class="form-group">
                                             <div class="form-group">
-                                                {{ form.username.label(class="form-control-label") }}
+                                                {{ registerform.username.label(class="form-control-label") }}
 
-                                                {% if form.username.errors %}
-                                                {{ form.username(class="form-control form-control-lg is-invalid") }}
+                                                {% if registerform.username.errors %}
+                                                {{ registerform.username(class="form-control form-control-lg is-invalid") }}
                                                 <div class="invalid-feedback">
-                                                    {% for error in form.username.errors %}
+                                                    {% for error in registerform.username.errors %}
                                                     <span>{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                                 {% else %}
-                                                {{ form.username(class="form-control form-control-lg") }}
+                                                {{ registerform.username(class="form-control form-control-lg") }}
                                                 {% endif %}
                                             </div>
                                             <div class="form-group">
-                                                {{ form.email.label(class="form-control-label") }}
-                                                {% if form.email.errors %}
-                                                {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                                {{ registerform.email.label(class="form-control-label") }}
+                                                {% if registerform.email.errors %}
+                                                {{ registerform.email(class="form-control form-control-lg is-invalid") }}
                                                 <div class="invalid-feedback">
-                                                    {% for error in form.email.errors %}
+                                                    {% for error in registerform.email.errors %}
                                                     <span>{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                                 {% else %}
-                                                {{ form.email(class="form-control form-control-lg") }}
+                                                {{ registerform.email(class="form-control form-control-lg") }}
                                                 {% endif %}
                                             </div>
                                             <div class="form-group">
-                                                {{ form.password.label(class="form-control-label") }}
-                                                {% if form.password.errors %}
-                                                {{ form.password(class="form-control form-control-lg is-invalid") }}
+                                                {{ registerform.password.label(class="form-control-label") }}
+                                                {% if registerform.password.errors %}
+                                                {{ registerform.password(class="form-control form-control-lg is-invalid") }}
                                                 <div class="invalid-feedback">
-                                                    {% for error in form.password.errors %}
+                                                    {% for error in registerform.password.errors %}
                                                     <span>{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                                 {% else %}
-                                                {{ form.password(class="form-control form-control-lg") }}
+                                                {{ registerform.password(class="form-control form-control-lg") }}
                                                 {% endif %}
                                             </div>
                                             <div class="form-group">
-                                                {{ form.confirm_password.label(class="form-control-label") }}
-                                                {% if form.confirm_password.errors %}
-                                                {{ form.confirm_password(class="form-control form-control-lg is-invalid") }}
+                                                {{ registerform.confirm_password.label(class="form-control-label") }}
+                                                {% if registerform.confirm_password.errors %}
+                                                {{ registerform.confirm_password(class="form-control form-control-lg is-invalid") }}
                                                 <div class="invalid-feedback">
-                                                    {% for error in form.confirm_password.errors %}
+                                                    {% for error in registerform.confirm_password.errors %}
                                                     <span>{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                                 {% else %}
-                                                {{ form.confirm_password(class="form-control form-control-lg") }}
+                                                {{ registerform.confirm_password(class="form-control form-control-lg") }}
                                                 {% endif %}
                                             </div>
                                         </fieldset>
                                         <div class="form-group">
-                                            {{ form.submit(class="btn btn-outline-info") }}
+                                            {{ registerform.submit(class="btn btn-outline-info") }}
                                         </div>
                                     </form>
                                 </div>
@@ -120,41 +130,39 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                             <div class="tab-pane" id="tab2">
                                 <div class="content-section">
                                     <form method="POST" action="">
-                                        {{ form.hidden_tag() }}
+                                        {{ loginform.hidden_tag() }}
                                         <fieldset class="form-group">
                                             <div class="form-group">
-                                                {{ form.email.label(class="form-control-label") }}
-                                                {% if form.email.errors %}
-                                                {{ form.email(class="form-control form-control-lg is-invalid") }}
+                                                {{ loginform.email.label(class="form-control-label") }}
+                                                {% if loginform.email.errors %}
+                                                {{ loginform.email(class="form-control form-control-lg is-invalid") }}
                                                 <div class="invalid-feedback">
-                                                    {% for error in form.email.errors %}
+                                                    {% for error in loginform.email.errors %}
                                                     <span>{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                                 {% else %}
-                                                {{ form.email(class="form-control form-control-lg") }}
+                                                {{ loginform.email(class="form-control form-control-lg") }}
                                                 {% endif %}
                                             </div>
                                             <div class="form-group">
-                                                {{ form.password.label(class="form-control-label") }}
-                                                {% if form.password.errors %}
-                                                {{ form.password(class="form-control form-control-lg is-invalid") }}
+                                                {{ loginform.password.label(class="form-control-label") }}
+                                                {% if loginform.password.errors %}
+                                                {{ loginform.password(class="form-control form-control-lg is-invalid") }}
                                                 <div class="invalid-feedback">
-                                                    {% for error in form.password.errors %}
+                                                    {% for error in loginform.password.errors %}
                                                     <span>{{ error }}</span>
                                                     {% endfor %}
                                                 </div>
                                                 {% else %}
-                                                {{ form.password(class="form-control form-control-lg") }}
+                                                {{ loginform.password(class="form-control form-control-lg") }}
                                                 {% endif %}
                                             </div>
                                             <div class="form-check">
-                                            <!-- TODO: Dit even terugplaatsen van routes.py
-                                            -->
                                             </div>
                                         </fieldset>
                                         <div class="form-group">
-                                            {{ form.submit(class="btn btn-outline-info") }}
+                                            {{ loginform.submit(class="btn btn-outline-info") }}
                                         </div>
                                         <small class="text-muted ml-2">
                                             <a href="#">Forgot Password?</a>
@@ -171,6 +179,69 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     <button type="button" class="btn btn-primary">Save changes</button>
                 </div>
                 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Account settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="content-section">
+                        <div class="media">
+                            <img class="rounded-circle account-img" src="{{ image_file }}">
+                            <div class="media-body">
+                                <h2 class="account-heading">{{ current_user.username }}</h2>
+                                <p class="text-secondary">{{ current_user.email }}</p>
+                            </div>
+                        </div>
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            {{ accountform.hidden_tag() }}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Account Info</legend>
+                                <div class="form-group">
+                                    {{ accountform.username.label(class="form-control-label") }}
+
+                                    {% if accountform.username.errors %}
+                                    {{ accountform.username(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in accountform.username.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    {{ accountform.username(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ accountform.email.label(class="form-control-label") }}
+                                    {% if accountform.email.errors %}
+                                    {{ accountform.email(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in accountform.email.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    {{ accountform.email(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <!-- Codesave line 1-->
+                            </fieldset>
+                            <div class="form-group">
+                                {{ accountform.submit(class="btn btn-outline-info") }}
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -214,8 +285,6 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     {% endwith %}
                 </div>
 
-
-
                 {% with loops = get_flashed_messages(category_filter=["loops"]) %}
                 {% if loops %}
                 <div class="alert-message block-message loops">
@@ -252,16 +321,58 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
-                <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data"
-                    action="/feedback">
-                    <div class="form-group">
-                        <label for="naamForm"> Name </label>
-                        <input type="text" name="username" id="naamForm" class="form-control mb-4">
-                        <label for="textForm"> Your message </label>
-                        <textarea class="form-control mb-4" id="textForm" name="content" rows="3"></textarea>
-                        <input type="submit" class="btn btn-primary" value="Upload">
+                <div class="content-section">
+                    <form method="POST" action="">
+                        {{ postform.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">{{ legend }}</legend>
+                            <div class="form-group">
+                                {{ postform.title.label(class="form-control-label") }}
+                                {% if postform.title.errors %}
+                                {{ postform.title(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in postform.title.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ postform.title(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ postform.content.label(class="form-control-label") }}
+                                {% if postform.content.errors %}
+                                {{ postform.content(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in postform.content.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ postform.content(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            {{ postform.submit(class="btn btn-outline-info") }}
+                        </div>
+                    </form>
+                </div>
+
+                {% for post in posts %}
+                <article class="media content-section">
+                <!-- Codesave  line 12 -->
+                  <div class="media-body">
+                    <div class="article-metadata">
+                      <a class="mr-2" href="#">{{ post.author.username }}</a>
+                      <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                     </div>
-                </form>
+                    <p class="article-title">{{ post.title }}</p>
+                    <p class="article-content">{{ post.content }}</p>
+                  </div>
+                </article>
+                {% endfor %}
+
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>

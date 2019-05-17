@@ -1,45 +1,116 @@
 import os, time, flask, string, MySQLdb, openpyxl, wtforms
+
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory, send_file
-from flaskr import app, conn, allowed_file
+
+from flaskr import app, allowed_file, flask_bcrypt, db, bcrypt
+
 from os.path import join, dirname, realpath
+
 from flask_sqlalchemy import SQLAlchemy
-from werkzeug.utils import *
+
 from openpyxl import load_workbook
+
+from werkzeug.utils import *
 from werkzeug.wrappers import BaseRequest
 from werkzeug.wsgi import responder
 from werkzeug.exceptions import HTTPException, NotFound
-from forms import RegistrationForm, LoginForm
-from wtforms import form
+
+from forms import RegistrationForm, LoginForm, AccountForm, PostForm
+from flaskr.models import User, Post
+from flask_login import login_user, current_user, logout_user, login_required
 
 #Variables voor de exception catchers, moeten eerst een value hebben for some reason
 a, b, c, d = '', '', '', ''
+
+posts = [
+    {
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
+    },
+    {
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
+    }
+]
 
 #TODO: Dit even uncommenten nog  
 #{{ form.remember(class="form-check-input") }}
 #{{ form.remember.label(class="form-check-label") }} 
 
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM post")
-    posts = cursor.fetchall()
-
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        flash (f'Account created for: {form.username.data}!', 'succes')
-        return redirect(url_for('home'))
-    return render_template('index.html', posts=posts, form=form)
     session.pop('_flashes', None)
+    registerform = RegistrationForm()
+
+    if registerform.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(registerform.password.data).decode('utf-8')
+        user = User(username=registerform.username.data, email=registerform.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created! You are now able to log in', 'success')
+        return redirect(url_for('index'))
+    #return render_template('index.html', registerform=registerform, posts=posts)
+
+    loginform = LoginForm()
+    if loginform.validate_on_submit():
+        user = User.query.filter_by(email=loginform.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, loginform.password.data):
+            login_user(user, remember=loginform.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('index'))
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    #return render_template('index.html', title='Login', loginform=loginform, registerform=registerform)
+
+    accountform = AccountForm()
+    if accountform.validate_on_submit():
+        if accountform.picture.data:
+            picture_file = save_picture(accountform.picture.data)
+            current_user.image_file = picture_file
+        current_user.username = accountform.username.data
+        current_user.email = accountform.email.data
+        db.session.commit()
+        flash('Your account has been updated!', 'success')
+        return redirect(url_for('index'))
+    #elif request.method == 'GET':
+        #if current_user.is_authenticated:
+            #accountform.username.data = current_user.username
+            #accountform.email.data = current_user.email
+        #else:
+            #return redirect(url_for('index'))
+            #return render_template('index.html', title='Account', image_file=image_file, accountform=accountform, loginform=loginform, registerform=registerform)
+    #image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
+    #return render_template('index.html', title='Account', image_file=image_file, accountform=accountform, loginform=loginform, registerform=registerform)
+    #return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform)
+
+    postform = PostForm()
+    if postform.validate_on_submit():
+        post = Post(title=postform.title.data, content=postform.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('index'))
+    
+    posts = Post.query.all()
+    return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 @app.route('/feedback', methods=['POST', 'GET'])
 def feedback():
     try: 
-        username = str(request.form["username"])
-        content = str(request.form["content"])
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO post (username, content)VALUES(%s,%s)",(username, content))
-        conn.commit()
+        #username = str(request.form["username"])
+        #content = str(request.form["content"])
+        #cursor = conn.cursor()
+        #cursor.execute("INSERT INTO post (username, content)VALUES(%s,%s)",(username, content))
+        #conn.commit()
 
         return redirect("/")
         return render_template('index.html')
