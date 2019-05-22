@@ -1,3 +1,7 @@
+body{
+    overflow-x: hidden;
+}
+
 .radiobuttons
 {
   height: 5em;

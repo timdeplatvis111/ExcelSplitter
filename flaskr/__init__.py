@@ -17,24 +17,21 @@ from werkzeug.utils import *
 
 app = Flask(__name__)
 
+#Zet het filetypen naar .xlsx, een standaard Excel formaat. Andre soort Excel bestanden zijn niet supported door issues met openpyxl
 ALLOWED_EXTENSIONS = set(['xlsx'])
 def allowed_file(filename):
     return '.' in filename and \
     filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+#Instellingen die gebruikt worden voor de hele app
 app.config.from_mapping(
-    SECRET_KEY = b'5t=759f9$gfdh>f047]8y87^4#5gq8*3nft8503#mgtrhsuooer9',
-    UPLOADED_FILES = f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/',
-    UPLOADS_PATH = join(dirname(realpath(__file__)), f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/'),
+    SECRET_KEY = b'5t=759f9$gfdhpf047]8y87^4#5gq8*3nft8503#mgtrhsuooer9',
+    UPLOADED_FILES = f'files/',
+    UPLOAD_FOLDER = join(dirname(realpath(__file__)), f'files/'),
     DEBUG = 'true',
     DEBUG_MODE = 'true',
     FLASK_ENV= 'development',
-    #conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
 )
-
-#Dit was voor het legacy database systeem, wordt even bewaard voor als het nieuwe systeem niet werkt 
-#conn = MySQLdb.connect(host="localhost",user="root",password="",db="Splitter")
-#conn = MySQLdb.connect(host="Timdeplatvis111.mysql.pythonanywhere-services.com",user="Timdeplatvis111",password="CdYudQM75q7DxHh",db="Timdeplatvis111$Splitter")
 
 #Connect naar de MYsql database met flask sqlalchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yeet@localhost/splitter'
@@ -52,8 +49,10 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
+#Initialseerd de database en bcrypt
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+#Import the routes uit routes.py van de folder flaskr
 from flaskr import routes
 

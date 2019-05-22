@@ -29,11 +29,11 @@ Also even de layour fixen, er zitten nu blank spaces op de page
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
             <a class="navbar-brand" href="">Excel multi tool dingetje </a>
 
-            <p> {% if current_user.is_authenticated %} </p>
+            {% if current_user.is_authenticated %}
             <div class="navbar-login ml-auto mr-4">
-                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#accountModal">
+                <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#accountModal">
                     {{ current_user.username }} </button>
-                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                <a class="nav-item nav-link float-right" href="{{ url_for('logout') }}">Logout</a>
             </div>
             {% else %}
             <div class="navbar-login ml-auto mr-4">
@@ -233,7 +233,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                                     {{ accountform.email(class="form-control form-control-lg") }}
                                     {% endif %}
                                 </div>
-                                <!-- Codesave line 1-->
+                                <!-- Codesave line 15, index.html line 236 -->
                             </fieldset>
                             <div class="form-group">
                                 {{ accountform.submit(class="btn btn-outline-info") }}
@@ -251,18 +251,22 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+                {% if current_user.is_authenticated %}
                 <p> Currently only .xlsx files are supported </p>
                 <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
                     <input type="file" name="uploadedfiles" multiple="" class="btn btn-link">
                     <input type="submit" class="btn btn-primary" value="Upload">
                 </form>
+                {% else %}
+                <p> Please login first to gain acces to this webapp </p>
+                {% endif %}
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
         </div>
 
         <div class="row">
-            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
                 <!-- Voor de time message -->
                 {% with time = get_flashed_messages(category_filter=["time"]) %}
                 {% if time %}
@@ -300,7 +304,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% if fileerror %}
                 <div class="alert-message block-message error">
                     {%- for msg in fileerror %}
-                    <p> Please upload an .xlsx file, other Excel filetypes like .cvs are not currently supported </p>
+                    <p> Please upload a .xlsx file, other Excel filetypes are not currently supported </p>
                     {% endfor -%}
                 </div>
                 {% endif %}
@@ -310,7 +314,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% with error = get_flashed_messages(category_filter=["error"]) %}
                 <div class="alert-message block-message error">
                     {%- for msg in error %}
-                    <p> Something went wrong, please contact the administrator. Be sure to copy this error: {{ msg }}
+                    <p> Error {{ msg }}
                     </p>
                     {% endfor -%}
                 </div>
@@ -322,6 +326,9 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
                 <div class="content-section">
+                    {% if current_user.is_authenticated %}
+                    <p> This comment section is for providing meaningfull feedback, if you want to see a function added you can comment here </p>
+                    <p> You can also leave suggestions for new tasks you think can be automated </p>
                     <form method="POST" action="">
                         {{ postform.hidden_tag() }}
                         <fieldset class="form-group">
@@ -357,9 +364,12 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                             {{ postform.submit(class="btn btn-outline-info") }}
                         </div>
                     </form>
+                    {% else %}
+                    <p> Please login first to provide feedback!</p>
+                    {% endif %}
                 </div>
 
-                {% for post in posts %}
+                {% for post in posts|sort(attribute='date_posted', reverse=true) %}
                 <article class="media content-section">
                 <!-- Codesave  line 12 -->
                   <div class="media-body">

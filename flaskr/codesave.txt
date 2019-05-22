@@ -11,3 +11,11 @@
 
 <!-- Codesave  line 12 -->
 <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+
+<div class="form-group">
+<p> Files uploaded by you: </p>
+{% for file in os.listdir("../../files/{current_user.username}") %}
+url = path.abspath(path.join({{ current_user.username }} ,"../.."))
+<a href="{{ url_for('static', filename='url /%s' % (y)) }}">{{current_user.namename}} </a>
+{% endfor %}
+</div>

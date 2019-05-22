@@ -1,4 +1,4 @@
-import os, time, flask, string, MySQLdb, openpyxl, wtforms
+import os, time, flask, string, MySQLdb, openpyxl, wtforms, jinja2
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory, send_file
 
@@ -22,28 +22,12 @@ from flask_login import login_user, current_user, logout_user, login_required
 #Variables voor de exception catchers, moeten eerst een value hebben for some reason
 a, b, c, d = '', '', '', ''
 
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
-
 #TODO: Dit even uncommenten nog  
 #{{ form.remember(class="form-check-input") }}
 #{{ form.remember.label(class="form-check-label") }} 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    session.pop('_flashes', None)
     registerform = RegistrationForm()
 
     if registerform.validate_on_submit():
@@ -53,7 +37,6 @@ def index():
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('index'))
-    #return render_template('index.html', registerform=registerform, posts=posts)
 
     loginform = LoginForm()
     if loginform.validate_on_submit():
@@ -64,7 +47,6 @@ def index():
             return redirect(next_page) if next_page else redirect(url_for('index'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    #return render_template('index.html', title='Login', loginform=loginform, registerform=registerform)
 
     accountform = AccountForm()
     if accountform.validate_on_submit():
@@ -96,27 +78,16 @@ def index():
         return redirect(url_for('index'))
     
     posts = Post.query.all()
-    return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts)
+
+    environment = jinja2.Environment(os)
+    environment.filters['os'] = os
+
+    return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts, os=os)
 
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
-@app.route('/feedback', methods=['POST', 'GET'])
-def feedback():
-    try: 
-        #username = str(request.form["username"])
-        #content = str(request.form["content"])
-        #cursor = conn.cursor()
-        #cursor.execute("INSERT INTO post (username, content)VALUES(%s,%s)",(username, content))
-        #conn.commit()
-
-        return redirect("/")
-        return render_template('index.html')
-    except:
-        return redirect("/")
-        return render_template('index.html')
 
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
@@ -124,6 +95,8 @@ def upload():
     try: 
         #Pakt de files uit de form
         request.files['uploadedfiles']
+
+        userfolder = current_user.username
 
         #Maakt een list van de 2 geuploade files, zodat we er later door heen kunnen loopen 
         yeet = request.files.getlist('uploadedfiles')
@@ -137,43 +110,50 @@ def upload():
 
             #Checkt of het type file klopt, er mogen alleen .xlsx files geupload worden
             if file and allowed_file(filename):
-                file.save(os.path.join(app.config['UPLOADS_PATH'], filename)) 
+                if (os.path.exists(f'files/{userfolder}')):
+                    file.save(f'files/{userfolder}/{filename}')
+                else:
+                    os.makedirs(f'files/{userfolder}')
+                    file.save(f'files/{userfolder}/{filename}')
             else:
                 fileerror= 'fuck'
                 flash('yeet', 'fileerror')
                 return render_template('index.html', fileerror=fileerror)
 
-        #Zet de filenamen array in de session voor later gebruik 
-        session['filenamen[]'] = filenamen
+        if len(filenamen) is not 2:
+            flash('Please upload 2 Excel files', 'error')
+            return render_template('convert.html', error=error)    
+        else:
+            #Zet de filenamen array in de session voor later gebruik 
+            session['filenamen[]'] = filenamen
         return render_template('convert.html', filenamen=session['filenamen[]'])    
-        session.pop('_flashes', None)
 
     except KeyError as d:
-        #flash(str(d), 'error')
+        flash(str(d), 'error')
         return redirect("/")
         return render_template('index.html')
-        #return render_template('index.html', error=error)
-        session.pop('_flashes', None)
 
     except:
-        flash('fuck', 'error')
         return redirect("/")
         return render_template('index.html', error=error)
-        session.pop('_flashes', None)
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
     try:
+        userfolder = current_user.username
+        #Loopt door het alfabet heen en assigned zo een nummer naar elk letter, A = 1, B = 2, etc
+        #Dit is nog een probleem, dit gaat alleen van column A tot X
+        values = dict()
+        for index, letter in enumerate(string.ascii_lowercase):
+            values[index] = letter
+            print(values[index])
+
         #Pakt de filenamen array uit de session
         filenamen = session.get('filenamen[]')
 
         #Split de array in 2 variabelen voor later gebruik
         filenaam1 = filenamen[0]
         filenaam2 = filenamen[1]
-
-        #Laad beide Excel bestanden 
-        workbook1 = load_workbook(filename=f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
-        workbook2 = load_workbook(filename=f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
 
         #column1 = de eerste column die je wilt matchen uit de form (filenaam1)
         #column2 = de tweede column die je wilt matchen uit de form (filenaam2)
@@ -188,8 +168,11 @@ def convert():
         column1copy = request.form['column1copy']
         column2copy = request.form['column2copy']
 
-        #Zet beide workbooks als de active workbooks
+        #Zet beide workbooks als de active workbooks, dit moet om het te kunnen gebruiken in OpenpyXL
+        workbook1 = load_workbook(filename=(f"files/{userfolder}/{filenaam1}"))
         sheet1 = workbook1.active
+
+        workbook2 = load_workbook(filename=(f"files/{userfolder}/{filenaam2}"))
         sheet2 = workbook2.active
 
         #Convert deze variabelen naar integrers voor later gebruik
@@ -198,13 +181,6 @@ def convert():
 
         column1 = int(column1)
         column2 = int(column2)
-
-        #Loopt door het alfabet heen en assigned zo een nummer naar elk letter, A = 1, B = 2, etc
-        #Dit is nog een probleem, dit gaat alleen van column A tot X
-        values = dict()
-        for index, letter in enumerate(string.ascii_lowercase):
-            values[index] = letter
-            print(values[index])
 
         #Zorgt ervoor dat we kunnen werken met column A, B, C in plaats van 1, 2 ,3 omdat dit nodig is voor OpenPyxl 
         sheet1column = values[column1]
@@ -217,54 +193,76 @@ def convert():
         print (option)
         t = time.process_time()
         loops = 0
+
         if option == 'file0':
             filename = filenaam1
+
             for cell in sheet1[sheet1column]:
+                filename = filenaam2
                 I = cell.row
                 sheet1value = sheet1.cell(row=I, column=column1).value
-                #print(sheet1Value)
+
                 for cell in sheet2[sheet2column]:
                     E = cell.row
                     sheet2value = sheet2.cell(row=E, column=column2).value
+
                     if sheet1value == sheet2value:
                         sheet1copyvalue = sheet1.cell(row=I, column=column1copy).value
                         sheet2.cell(row=E, column=column2copy, value=sheet1copyvalue)
-                        print(sheet1copyvalue)
-                        loops +=1
-                    else:
-                        loops +=1
-        elif option == 'file1':
-            filename = filenaam2
-            for cell in sheet2[sheet2column]:
-                I = cell.row
-                sheet2value = sheet2.cell(row=I, column=column2).value
-                #print(sheet1Value)
-                for cell in sheet1[sheet1column]:
-                    E = cell.row
-                    sheet1value = sheet1.cell(row=E, column=column1).value
-                    if sheet2value == sheet1value:
-                        sheet2copyvalue = sheet2.cell(row=I, column=column1copy).value
-                        sheet1.cell(row=E, column=column2copy, value=sheet2copyvalue)
-                        print(column2copy)
-                        print(sheet2copyvalue)
                         loops +=1
                     else:
                         loops +=1
 
-        #Saved de 2 aangepaste files terug naar de /files/ folder
-        workbook1.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam1}')
-        workbook2.save(f'C:/Users/timde/Desktop/KingsofIndigo/Excel/flaskr/files/{filenaam2}')
+        elif option == 'file1':
+            filename = filenaam2
+
+            for cell in sheet2[sheet2column]:
+                I = cell.row
+                sheet2value = sheet2.cell(row=I, column=column2).value
+
+                for cell in sheet1[sheet1column]:
+                    E = cell.row
+                    sheet1value = sheet1.cell(row=E, column=column1).value
+
+                    if sheet2value == sheet1value:
+                        sheet1copyvalue = sheet2.cell(row=I, column=column1copy).value
+                        sheet1.cell(row=E, column=column2copy, value=sheet1copyvalue)
+                        loops +=1
+                    else:
+                        loops +=1
+
+        if option == 'file0':
+            if (os.path.exists(f'files/{userfolder}')):
+                workbook1.save(f'files/{userfolder}/{filenaam1}')
+                workbook2.save(f'files/{userfolder}/{filenaam2}')
+            else:
+                os.makedirs(f'files/{userfolder}')
+                workbook1.save(f'files/{userfolder}/{filenaam1}')
+                workbook2.save(f'files/{userfolder}/{filenaam2}')
+
+        elif option == 'file1':
+            if (os.path.exists(f'files/{userfolder}')):
+                workbook1.save(f'files/{userfolder}/{filenaam1}')
+                workbook2.save(f'files/{userfolder}/{filenaam2}')
+            else:
+                os.makedirs(f'files/{userfolder}')
+                workbook1.save(f'files/{userfolder}/{filenaam1}')
+                workbook2.save(f'files/{userfolder}/{filenaam2}')
+
+        #Measured hoe lang het duurde voor de code om door de logica te gaan
         elapsed_time = time.process_time() - t
 
         #Dit zorgt er voor dat de time en het aantal loops gerendered worden in de template 
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
 
-        #return redirect(url_for('upload', filename=filenaam1))
-        return send_from_directory(app.config["UPLOADED_FILES"], filename=filename, as_attachment=True)
-        session.pop('_flashes', None)
-        #return redirect("/")
-        #return render_template('index.html', filenamen=session['filenamen[]'])    
+        #TODO: Dit moet even gefixt worden
+        if option == 'file0':
+            return send_from_directory(f'../files/{userfolder}', filenaam2, as_attachment=True)
+        elif option == 'file1':
+            return send_from_directory(f'../files/{userfolder}', filenaam1, as_attachment=True)
+
+        session.pop('_flashes', None) 
 
     #Dit zijn alle exceptions voor verschillende errors, meeste errors zouden niet kunnen gebeuren, maar staan er toch just to be sure
     except KeyError as a:
@@ -291,7 +289,7 @@ def convert():
         session.pop('_flashes', None)
 
     except:
-        message = 'You went passed all exception catchers, impressive.'
+        message = 'This is never supposed to happen, Please contact the administrator if it does'
         flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
