@@ -29,7 +29,6 @@ a, b, c, d = '', '', '', ''
 @app.route('/', methods=['GET', 'POST'])
 def index():
     registerform = RegistrationForm()
-
     if registerform.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(registerform.password.data).decode('utf-8')
         user = User(username=registerform.username.data, email=registerform.email.data, password=hashed_password)
@@ -43,21 +42,36 @@ def index():
         user = User.query.filter_by(email=loginform.email.data).first()
         if user and bcrypt.check_password_hash(user.password, loginform.password.data):
             login_user(user, remember=loginform.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('index'))
+            #next_page = request.args.get('next')
+            #return redirect(next_page) if next_page else redirect(url_for('index'))
+            return redirect(url_for('index'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
 
     accountform = AccountForm()
     if accountform.validate_on_submit():
-        if accountform.picture.data:
-            picture_file = save_picture(accountform.picture.data)
-            current_user.image_file = picture_file
+        #if accountform.picture.data:
+        #    picture_file = save_picture(accountform.picture.data)
+        #    current_user.image_file = picture_file
         current_user.username = accountform.username.data
         current_user.email = accountform.email.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('index'))
+
+    if current_user.is_authenticated:
+        userfolder = current_user.username
+        userfiles = []
+
+        path = f'files/{userfolder}/'
+
+        for filename in os.listdir(path):
+            userfiles.append(filename)
+
+        session['filename'] = filename
+        session['path'] = path
+        session['userfiles[]'] = userfiles
+
     #elif request.method == 'GET':
         #if current_user.is_authenticated:
             #accountform.username.data = current_user.username
@@ -82,7 +96,18 @@ def index():
     environment = jinja2.Environment(os)
     environment.filters['os'] = os
 
-    return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts, os=os)
+    return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts, os=os, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'])
+
+@app.route('/files', methods=['GET', 'POST'])
+def files():
+    filename = session.get('filename')
+    path = session.get('path')
+    userfiles = session.get('userfiles[]')
+
+    print(path)
+    print(filename)
+
+    return send_from_directory(f'../{path}', userfiles[1], as_attachment=True)
 
 @app.route("/logout")
 def logout():
@@ -256,7 +281,6 @@ def convert():
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
 
-        #TODO: Dit moet even gefixt worden
         if option == 'file0':
             return send_from_directory(f'../files/{userfolder}', filenaam2, as_attachment=True)
         elif option == 'file1':

@@ -222,8 +222,19 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                                 </div>
                                 <div class="form-group">
                                     {{ accountform.email.label(class="form-control-label") }}
+                                    <p> When updating your account email and username the folder containing your previously uploaded files will (currently)
+                                    not be updated, please keep this in mind
+                                    </p>
+                                    <!--Moet loopen door de userfiles array en zo aparte links voor alle files generen-->
+                                    <p> Your previously uploaded files:</p>
+                                    {% for filename in userfiles %}
+                                        <a href="{{ url_for('files') }}"> {{ userfiles[i] }} </a> <br>
+                                        {{ i + 1 }}
+                                    {% endfor %}
+
                                     {% if accountform.email.errors %}
                                     {{ accountform.email(class="form-control form-control-lg is-invalid") }}
+                                    
                                     <div class="invalid-feedback">
                                         {% for error in accountform.email.errors %}
                                         <span>{{ error }}</span>
