@@ -15,7 +15,7 @@ from werkzeug.wrappers import BaseRequest
 from werkzeug.wsgi import responder
 from werkzeug.exceptions import HTTPException, NotFound
 
-from forms import RegistrationForm, LoginForm, AccountForm, PostForm
+from forms import RegistrationForm, LoginForm, PostForm
 from flaskr.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -47,7 +47,7 @@ def index():
             return redirect(url_for('index'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-
+    """
     accountform = AccountForm()
     if accountform.validate_on_submit():
         #if accountform.picture.data:
@@ -58,19 +58,44 @@ def index():
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('index'))
+    """
 
     if current_user.is_authenticated:
         userfolder = current_user.username
+        converteduserfiles = []
         userfiles = []
 
         path = f'files/{userfolder}/'
 
+        if (os.path.exists(f'files/{userfolder}/converted')):
+            pathtoconverted = f'files/{userfolder}/converted'
+        else:
+            os.mkdir(f'files/{userfolder}')
+            os.mkdir(f'files/{userfolder}/converted')
+            pathtoconverted = f'files/{userfolder}/converted'
+
         for filename in os.listdir(path):
             userfiles.append(filename)
 
+        for filename in os.listdir(pathtoconverted):
+            converteduserfiles.append(filename)
+    else:
+        filename = ''
+        path = ''
+        userfiles = '', ''
+        converteduserfiles = ''
+        pathtoconverted = ''
         session['filename'] = filename
         session['path'] = path
         session['userfiles[]'] = userfiles
+        session['converteduserfiles[]'] = converteduserfiles
+        session['pathtoconverted'] = pathtoconverted
+
+    session['filename'] = filename
+    session['path'] = path
+    session['userfiles[]'] = userfiles
+    session['converteduserfiles[]'] = converteduserfiles
+    session['pathtoconverted'] = pathtoconverted
 
     #elif request.method == 'GET':
         #if current_user.is_authenticated:
@@ -96,7 +121,9 @@ def index():
     environment = jinja2.Environment(os)
     environment.filters['os'] = os
 
-    return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts, os=os, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'])
+    #return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, os=os)
+    return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
+    #return render_template('index.html', title='Account', pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], os=os, accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts)
 
 @app.route('/files', methods=['GET', 'POST'])
 def files():
@@ -104,12 +131,21 @@ def files():
     path = session.get('path')
     userfiles = session.get('userfiles[]')
 
-    print(path)
-    print(filename)
+    for index, filename in enumerate(userfiles):
+        print(index)
+    return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
 
-    return send_from_directory(f'../{path}', userfiles[1], as_attachment=True)
+@app.route('/files2', methods=['GET', 'POST'])
+def files2():
+    filename = session.get('filename')
+    converteduserfiles = session.get('converteduserfiles[]')
+    pathtoconverted = session.get('pathtoconverted')
 
-@app.route("/logout")
+    for index, filename in enumerate(converteduserfiles):
+        print(index)
+    return send_from_directory(f'../{pathtoconverted}', converteduserfiles[index], as_attachment=True)
+
+@app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
@@ -207,7 +243,6 @@ def convert():
         column1 = int(column1)
         column2 = int(column2)
 
-        #Zorgt ervoor dat we kunnen werken met column A, B, C in plaats van 1, 2 ,3 omdat dit nodig is voor OpenPyxl 
         sheet1column = values[column1]
         sheet2column = values[column2]
 
@@ -281,9 +316,16 @@ def convert():
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
 
+        if (os.path.exists(f'files/{userfolder}/converted')):
+            print('YEETICUS')
+        else:
+            os.mkdir(f'files/{userfolder}/converted')
+
         if option == 'file0':
+            workbook2.save(f'files/{userfolder}/converted/{filenaam2}')
             return send_from_directory(f'../files/{userfolder}', filenaam2, as_attachment=True)
         elif option == 'file1':
+            workbook1.save(f'files/{userfolder}/converted/{filenaam1}')
             return send_from_directory(f'../files/{userfolder}', filenaam1, as_attachment=True)
 
         session.pop('_flashes', None) 

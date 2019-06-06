@@ -14,7 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
-    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet"> 
     <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"> </script>
 
@@ -23,7 +23,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
-            <a class="navbar-brand" href="">Excel multi tool dingetje </a>
+            <a class="navbar-brand" href="">Koi Excel Multi-tool </a>
             <div class="collapse navbar-collapse" id="collapsibleNavId">
             </div>
             <a class="nav-item float-right" data-toggle="modal" data-target="loginregistermodal"> </a>
@@ -55,7 +55,7 @@
                         <div class="radiobuttons">
                             <label> I want to copy the data from: </label>
                             <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0"
-                                    class="form-check-input radio"> {{ filenamen[0] }}</input> </div>
+                                    class="form-check-input radio"> {{ filenamen[0] }} </input> </div>
                             <div class="radiobutton"> <input type="radio" name="option" id="option2" value="file1"
                                     class="form-check-input radio"> {{ filenamen[1] }} </input> </div>
                         </div>
