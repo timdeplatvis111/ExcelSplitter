@@ -29,6 +29,7 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+"""
 class AccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -42,10 +43,13 @@ class AccountForm(FlaskForm):
                 raise ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
-        if email.data != current_user.email:
-            user = User.query.filter_by(email=email.data).first()
-            if user:
-                raise ValidationError('That email is taken. Please choose a different one.')
+        if current_user.username != empty:
+            if email.data != current_user.email:
+                user = User.query.filter_by(email=email.data).first()
+                if user:
+                    raise ValidationError('That email is taken. Please choose a different one.')
+
+"""
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])

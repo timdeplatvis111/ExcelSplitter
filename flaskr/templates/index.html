@@ -27,8 +27,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
-            <a class="navbar-brand" href="">Excel multi tool dingetje </a>
-
+            <a class="navbar-brand" href="">Koi Excel Multi-tool </a>
             {% if current_user.is_authenticated %}
             <div class="navbar-login ml-auto mr-4">
                 <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#accountModal">
@@ -164,9 +163,6 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                                         <div class="form-group">
                                             {{ loginform.submit(class="btn btn-outline-info") }}
                                         </div>
-                                        <small class="text-muted ml-2">
-                                            <a href="#">Forgot Password?</a>
-                                        </small>
                                     </form>
                                 </div>
                             </div>
@@ -194,53 +190,32 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     </button>
                 </div>
                 <div class="modal-body">
+                    {% if current_user.is_authenticated %}
                     <div class="content-section">
                         <div class="media">
                             <img class="rounded-circle account-img" src="{{ image_file }}">
                             <div class="media-body">
-                                <h2 class="account-heading">{{ current_user.username }}</h2>
-                                <p class="text-secondary">{{ current_user.email }}</p>
                             </div>
                         </div>
-                        <form method="POST" action="" enctype="multipart/form-data">
-                            {{ accountform.hidden_tag() }}
                             <fieldset class="form-group">
-                                <legend class="border-bottom mb-4">Account Info</legend>
+                                <legend class="border-bottom mb-4">Files</legend>
                                 <div class="form-group">
-                                    {{ accountform.username.label(class="form-control-label") }}
+                                    <!--Moet loopen door de userfiles array en zo aparte links voor alle files generen-->
+                                    <p> Your previously uploaded files:</p>
+                                    {% for filename in userfiles %}
+                                        <a href="{{ url_for('files') }}"> {{ userfiles[loop.index0] }} </a> <br> 
+                                    {% endfor %}
 
-                                    {% if accountform.username.errors %}
-                                    {{ accountform.username(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in accountform.username.errors %}
-                                        <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                    {% else %}
-                                    {{ accountform.username(class="form-control form-control-lg") }}
-                                    {% endif %}
-                                </div>
-                                <div class="form-group">
-                                    {{ accountform.email.label(class="form-control-label") }}
-                                    {% if accountform.email.errors %}
-                                    {{ accountform.email(class="form-control form-control-lg is-invalid") }}
-                                    <div class="invalid-feedback">
-                                        {% for error in accountform.email.errors %}
-                                        <span>{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                    {% else %}
-                                    {{ accountform.email(class="form-control form-control-lg") }}
-                                    {% endif %}
+                                    <p> Your previously converted files: </p>
+                                    {% for filename in converteduserfiles %}
+                                        <a href="{{ url_for('files2') }}"> {{ converteduserfiles[loop.index0] }} </a> <br> 
+                                    {% endfor %}
+                                    
                                 </div>
                                 <!-- Codesave line 15, index.html line 236 -->
-                            </fieldset>
-                            <div class="form-group">
-                                {{ accountform.submit(class="btn btn-outline-info") }}
-                            </div>
                         </form>
                     </div>
-
+                    {% endif %}
                 </div>
             </div>
         </div>
