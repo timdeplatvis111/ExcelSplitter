@@ -34,6 +34,7 @@ app.config.from_mapping(
 )
 
 #Connect naar de MYsql database met flask sqlalchemy
+#VERANDER HET PASSWORD, HET PASSWORD IS NU YEET
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yeet@localhost/splitter'
 
 #Zet de maximum allowed file size naar 16 MB
