@@ -17,13 +17,16 @@
     <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet"> 
     <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/bootstrap.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
 
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
-            <a class="navbar-brand" href="">Koi Excel Multi-tool </a>
+            <a class="navbar-brand" href="#"> 
+                <img src="../static/images/logo.png">
+            </a>
             <div class="collapse navbar-collapse" id="collapsibleNavId">
             </div>
             <a class="nav-item float-right" data-toggle="modal" data-target="loginregistermodal"> </a>
@@ -37,19 +40,35 @@
                 <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/convert">
                     <p> This is a very early development version, the program can currently only match values that are
                         exactly alike for example the K numbers </p>
-                    <p> The column number has to be an interger, this'll probably get changed soon. </p>
 
                     <div class="form-group">
-                        <label class="float-left"> I want to match the values from the given collumn number in file:
+                        <label class="float-left"> I want to match the values from the given column number in file:
                             {{ filenamen[0] }} </label>
                         <input type="number" name="column1" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label class="float-left"> I want to match the values from the given collumn number in file:
+                        <label class="float-left"> I want to match the values from the given column number in file:
                             {{ filenamen[1] }} </label>
                         <input type="number" name="column2" class="form-control">
                     </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label class="float-left"> I want match the numbers or letters from position
+                            Leave this BLANK if you just wanna match the entire value:
+                        </label>
+                        <input type="number" name="partcolumn1" class="form-control" id="partcolumn1">
+                        <div id="texticus"></div>
+                        <div id="output"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="float-left"> I want to match the numers or letters to position:  </label>
+                        <input type="number" name="partcolumn2" class="form-control">
+                    </div>
+
+                    <hr>
 
                     <div class="form-group">
                         <div class="radiobuttons">
@@ -71,6 +90,7 @@
                         <input type="number" name="column2copy" class="form-control">
                     </div>
                     <input type="submit" class="btn btn-primary float-left" value="Submit">
+                    <button class="btn btn-danger float-right">  <a href="/">Go back </a> </button>
                 </form>
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
@@ -78,5 +98,6 @@
         </div>
     </div>
 </body>
+<script src="{{ url_for('static', filename='js/index.js') }}"> </script>
 
 </html>

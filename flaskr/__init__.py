@@ -13,7 +13,12 @@ from werkzeug.utils import *
 #Voor het persoon die, heel misschien ooit, deze code zal vinden en er mee moet werken:
 #De code is shit, dat weet ik. Ik ben nog niet echt goed in Python. 
 #Als je deze code moet onderhouden en tips voor mij heeft, of gewoon vragen, voeg mij dan toe op: https://steamcommunity.com/id/timdeplatvis111/
-#Good luck bij dit bedrijf ouwe, ik vond mijn stage best leuk. 
+#Good luck bij dit bedrijf, ik vond mijn stage leuk. 
+
+#Als je een ontwikkelaar bent die deze code voor mij reviewed
+#Ik weet dat je eigelijk geen globlal variables moet gebruiken in Python, je moet ze declaren in de 'class' 
+#Verder is de code redelijk gestructureerd, veel succes tho
+#Er is sowieso ook een betere manier om de optie functie te maken
 
 app = Flask(__name__)
 

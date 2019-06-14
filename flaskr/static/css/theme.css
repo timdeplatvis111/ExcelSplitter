@@ -19,3 +19,13 @@ body{
 {
   width: 100%;
 }
+
+.navbar-brand img
+{
+    max-width: 250px;
+}
+
+.yeet 
+{
+    display: none;
+}

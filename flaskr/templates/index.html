@@ -27,7 +27,9 @@ Also even de layour fixen, er zitten nu blank spaces op de page
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
-            <a class="navbar-brand" href="">Koi Excel Multi-tool </a>
+            <a class="navbar-brand" href="#"> 
+                <img src="../static/images/logo.png">
+            </a>
             {% if current_user.is_authenticated %}
             <div class="navbar-login ml-auto mr-4">
                 <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#accountModal">
@@ -229,7 +231,8 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% if current_user.is_authenticated %}
                 <p> Currently only .xlsx files are supported </p>
                 <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
-                    <input type="file" name="uploadedfiles" multiple="" class="btn btn-link">
+                    <input type="file" name="uploadedfile1" class="btn btn-link">
+                    <input type="file" name="uploadedfile2" class="btn btn-link">
                     <input type="submit" class="btn btn-primary" value="Upload">
                 </form>
                 {% else %}
@@ -319,6 +322,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                                 </div>
                                 {% else %}
                                 {{ postform.title(class="form-control form-control-lg") }}
+                                <div id="output"></div>
                                 {% endif %}
                             </div>
                             <div class="form-group">
@@ -364,5 +368,6 @@ Also even de layour fixen, er zitten nu blank spaces op de page
         </div>
     </div>
 </body>
+<script src="{{ url_for('static', filename='js/index.js') }}"> </script>
 
 </html>
