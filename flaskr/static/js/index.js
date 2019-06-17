@@ -1,4 +1,5 @@
-$("#partcolumn1").on("input", function(e) 
+//$("#partcolumn1").on("input", function(e) 
+$("#dingetje :input").change(function() 
 {
     //$("#output").text( $(e.target).val())
     //console.log($("#output").text( $(e.target).val())
@@ -11,7 +12,11 @@ $("#partcolumn1").on("input", function(e)
         yeet = document.getElementById("partcolumn1").value;
         //console.log(yeet)
         yeeticus = Number(yeet)
-        var koi = 'KOI489204760284859020306'
+        flokken = ($('#texticus').text());
+        var koi = 'KOI'
+
+        var lolol = document.createTextNode(koi);
+        document.getElementById("texticus").append(lolol);
         
         for (i = 0; i < yeeticus; i++) 
         { 
@@ -20,10 +25,20 @@ $("#partcolumn1").on("input", function(e)
             //var newtext = document.createTextNode('-');
             //document.getElementById("output").appendChild(newtext);
             //document.getElementById("output").innerHTML = yeeticus
+            holyshit = Math.floor((Math.random() * $("#partcolumn1").val() * + 10) + $("#partcolumn1").val() + 10);
+
+            if (flokken.length < $("#partcolumn1").val())
+            {
+                var holyshit = document.createTextNode(holyshit)
+                document.getElementById("texticus").appendChild(holyshit);
+            }
         }
 
-        var lol = document.createTextNode(koi)
-        document.getElementById("texticus").appendChild(lol);
+        $("input").keyup(function()
+        {
+            $("#texticus").text('');
+            $('body').find('#texticus').removeClass();
+        });
 
         //var upArrow = document.createTextNode('↑');
         //document.getElementById("output").appendChild(upArrow);
@@ -31,17 +46,14 @@ $("#partcolumn1").on("input", function(e)
     else
     {
         i = 0;
-        $("#output").text('')
-        $('body').find('#output').addClass('Yeet');
-        $('body').find('#output').removeClass();
+        //$("#output").text('')
+        //$('body').find('#output').addClass('Yeet');
+        //$('body').find('#output').removeClass();
 
-        //$("#texticus").text('')
-        //$('body').find('#texticus').removeClass();
+        $("#texticus").text('')
+        $('body').find('#texticus').removeClass();
     }
 });
-
-$("#partcolumn1").val("This is a test");
-$("#partcolumn1").trigger("input");
 
 //Validatie toevoegen dat de 2e value niet hoger kan zijn dan de eerste
 
