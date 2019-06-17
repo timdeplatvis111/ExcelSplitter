@@ -1,4 +1,10 @@
 //$("#partcolumn1").on("input", function(e) 
+
+
+// Het moet nog laten zien van welke character tot welke character het matched, om het duidelijker te maken.
+// Misschien in plaats van een random getal kan ik gewoon een iteration gebruiken, dus dan wordt het
+// gewoon KOI1234567890s
+
 $("#dingetje :input").change(function() 
 {
     //$("#output").text( $(e.target).val())
