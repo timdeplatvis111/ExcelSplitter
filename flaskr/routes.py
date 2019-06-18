@@ -17,6 +17,7 @@ from werkzeug.exceptions import HTTPException, NotFound
 
 from forms import RegistrationForm, LoginForm, PostForm
 from flaskr.models import User, Post
+from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
 #Variables voor de exception catchers, moeten eerst een value hebben for some reason
