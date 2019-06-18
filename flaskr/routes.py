@@ -285,13 +285,17 @@ def convert():
                 filename = filenaam2
                 I = cell.row
                 sheet1value = sheet1.cell(row=I, column=column1).value
-                if sheet1value != '':
+                print(sheet1value)
+                #time.sleep(5)
+                if sheet1value != None:
                     sheet1value = sheet1value[partcolumn1:partcolumn2]
 
                 for cell in sheet2[sheet2column]:
                     E = cell.row
                     sheet2value = sheet2.cell(row=E, column=column2).value
-                    if sheet2value != '':
+                    print(sheet2value)
+                    #time.sleep(5)
+                    if sheet2value != None:
                         sheet2value = sheet2value[partcolumn1:partcolumn2]
 
                     if sheet1value == sheet2value:
@@ -307,13 +311,17 @@ def convert():
             for cell in sheet2[sheet2column]:
                 I = cell.row
                 sheet2value = sheet2.cell(row=I, column=column2).value
-                if sheet2value != '':
+                print(sheet2value)
+                #time.sleep(5)
+                if sheet2value != None:
                     sheet2value = sheet2value[partcolumn1:partcolumn2]
 
                 for cell in sheet1[sheet1column]:
                     E = cell.row
                     sheet1value = sheet1.cell(row=E, column=column1).value
-                    if sheet1value != '':
+                    print(sheet1value)
+                    #time.sleep(5)
+                    if sheet1value != None:
                         sheet1value = sheet1value[partcolumn1:partcolumn2]
                     
                     if sheet2value == sheet1value:
