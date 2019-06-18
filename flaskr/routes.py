@@ -132,7 +132,7 @@ def files():
     userfiles = session.get('userfiles[]')
 
     for index, filename in enumerate(userfiles):
-        print(index)
+        print('yeet')
     return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
 
 @app.route('/files2', methods=['GET', 'POST'])
@@ -142,7 +142,7 @@ def files2():
     pathtoconverted = session.get('pathtoconverted')
 
     for index, filename in enumerate(converteduserfiles):
-        print(index)
+        print('yeet2')
     return send_from_directory(f'../{pathtoconverted}', converteduserfiles[index], as_attachment=True)
 
 @app.route('/logout')
@@ -155,16 +155,21 @@ def upload():
     #Dit hele ding zit in een try catch systeem om elke soort exploit te voorkomen, ik wil geen random errors op de website. 
     try: 
         #Pakt de files uit de form
-        request.files['uploadedfiles']
+        request.files['uploadedfile1']
+        request.files['uploadedfile2']
 
         userfolder = current_user.username
 
         #Maakt een list van de 2 geuploade files, zodat we er later door heen kunnen loopen 
-        yeet = request.files.getlist('uploadedfiles')
+        #yeet = request.files.getlist('uploadedfiles')
+        yeet1 = request.files.getlist('uploadedfile1')
+        yeet2 = request.files.getlist('uploadedfile2')
+
+        yeet3 = yeet1 + yeet2
         filenamen = []
 
         #Loopt door de filelist heen
-        for file in yeet:     
+        for file in yeet3:     
             files = request.files.to_dict()
             filename = secure_filename(file.filename)
             filenamen.append(filename)
@@ -187,7 +192,7 @@ def upload():
         else:
             #Zet de filenamen array in de session voor later gebruik 
             session['filenamen[]'] = filenamen
-        return render_template('convert.html', filenamen=session['filenamen[]'])    
+            return render_template('convert.html', filenamen=session['filenamen[]'])    
 
     except KeyError as d:
         flash(str(d), 'error')
@@ -200,14 +205,15 @@ def upload():
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
-    try:
+    #try:
+        #TODO: Invalid Literal for Int() Base 10 fixen, denk een check invoeren voor als de form leeg is
+
         userfolder = current_user.username
         #Loopt door het alfabet heen en assigned zo een nummer naar elk letter, A = 1, B = 2, etc
         #Dit is nog een probleem, dit gaat alleen van column A tot X
         values = dict()
         for index, letter in enumerate(string.ascii_lowercase):
             values[index] = letter
-            print(values[index])
 
         #Pakt de filenamen array uit de session
         filenamen = session.get('filenamen[]')
@@ -229,6 +235,14 @@ def convert():
         column1copy = request.form['column1copy']
         column2copy = request.form['column2copy']
 
+        #part1column =  de eerste positie van het field waar je van wilt matchen
+        #part2column = de laatste positie van het field waar je van wilt matchen
+
+        #Voorbeeld: part1column = 5                           ↓ 
+        #Dan matched het de 2e character in de field, dus KOI12345678
+        partcolumn1 = request.form['partcolumn1']
+        partcolumn2 = request.form['partcolumn2']
+
         #Zet beide workbooks als de active workbooks, dit moet om het te kunnen gebruiken in OpenpyXL
         workbook1 = load_workbook(filename=(f"files/{userfolder}/{filenaam1}"))
         sheet1 = workbook1.active
@@ -243,6 +257,13 @@ def convert():
         column1 = int(column1)
         column2 = int(column2)
 
+        if partcolumn1 == '' or partcolumn2 == '':
+            partcolumn1 = 0 
+            partcolumn2 = 1000
+
+        partcolumn1 = int(partcolumn1)
+        partcolumn2 = int(partcolumn2)
+
         sheet1column = values[column1]
         sheet2column = values[column2]
 
@@ -250,9 +271,11 @@ def convert():
         #sheet1value = sheet1.cell(row=I, column=column1).value, I is gelijk aan de huidige cell's row
         #Dan gaat het naar de 2e for statement, hier gebeurt hetzelfde alleen checkt het nu of de de gevonden value gelijk is aan de value in het eerste bestand
 
-        print (option)
         t = time.process_time()
         loops = 0
+
+        print(partcolumn1)
+        print(partcolumn2)
 
         if option == 'file0':
             filename = filenaam1
@@ -261,10 +284,14 @@ def convert():
                 filename = filenaam2
                 I = cell.row
                 sheet1value = sheet1.cell(row=I, column=column1).value
+                sheet1value = sheet1value[partcolumn1:partcolumn2]
+                print(sheet1value)
+                print('yeeticus')
 
                 for cell in sheet2[sheet2column]:
                     E = cell.row
                     sheet2value = sheet2.cell(row=E, column=column2).value
+                    sheet2value = sheet2value[partcolumn1:partcolumn2]
 
                     if sheet1value == sheet2value:
                         sheet1copyvalue = sheet1.cell(row=I, column=column1copy).value
@@ -279,11 +306,13 @@ def convert():
             for cell in sheet2[sheet2column]:
                 I = cell.row
                 sheet2value = sheet2.cell(row=I, column=column2).value
+                sheet2value = sheet2value[partcolumn1:partcolumn2]
 
                 for cell in sheet1[sheet1column]:
                     E = cell.row
                     sheet1value = sheet1.cell(row=E, column=column1).value
-
+                    sheet1value = sheet1value[partcolumn1:partcolumn2]
+                    
                     if sheet2value == sheet1value:
                         sheet1copyvalue = sheet2.cell(row=I, column=column1copy).value
                         sheet1.cell(row=E, column=column2copy, value=sheet1copyvalue)
@@ -317,7 +346,7 @@ def convert():
         flash(loops, 'loops')
 
         if (os.path.exists(f'files/{userfolder}/converted')):
-            print('YEETICUS')
+            print('Converted yeet')
         else:
             os.mkdir(f'files/{userfolder}/converted')
 
@@ -331,34 +360,34 @@ def convert():
         session.pop('_flashes', None) 
 
     #Dit zijn alle exceptions voor verschillende errors, meeste errors zouden niet kunnen gebeuren, maar staan er toch just to be sure
-    except KeyError as a:
-        return redirect("/")
-        return render_template('index.html')
-        session.pop('_flashes', None)
+    #except KeyError as a:
+    #    return redirect("/")
+    #    return render_template('index.html')
+    #    session.pop('_flashes', None)
 
-    except NameError as b:
-        flash(str(b), 'error')
-        return redirect("/")
-        return render_template('index.html', error=error)
-        session.pop('_flashes', None)
+    #except NameError as b:
+    #    flash(str(b), 'error')
+    #    return redirect("/")
+    #    return render_template('index.html', error=error)
+    #    session.pop('_flashes', None)
 
-    except ValueError as c:
-        flash(str(c), 'error')
-        return redirect("/")
-        return render_template('index.html', error=error)
-        session.pop('_flashes', None)
+    #except ValueError as c:
+    #    flash(str(c), 'error')
+    #    return redirect("/")
+    #    return render_template('index.html', error=error)
+    #    session.pop('_flashes', None)
 
-    except TypeError as f:
-        flash(str(f), 'error')
-        return redirect("/")
-        return render_template('index.html', error=error)
-        session.pop('_flashes', None)
+    #except TypeError as f:
+    #    flash(str(f), 'error')
+    #    return redirect("/")
+    #    return render_template('index.html', error=error)
+    #    session.pop('_flashes', None)
 
-    except:
-        message = 'This is never supposed to happen, Please contact the administrator if it does'
-        flash(str(message), 'error')
-        return redirect("/")
-        return render_template('index.html', error=error)
-        session.pop('_flashes', None)
+    #except:
+    #    message = 'This is never supposed to happen, Please contact the administrator if it does'
+    #    flash(str(message), 'error')
+    #    return redirect("/")
+    #    return render_template('index.html', error=error)
+    #    session.pop('_flashes', None)
 
 
