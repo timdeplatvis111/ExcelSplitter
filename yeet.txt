@@ -1,0 +1,7 @@
+index.html line 232
+{% if current_user.is_authenticated %}
+
+index.html line 238
+{% else %}
+<p> Please login first to gain acces to this webapp </p>
+{% endif %}

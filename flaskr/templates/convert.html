@@ -73,7 +73,7 @@
                     <div class="form-group">
                         <div class="radiobuttons">
                             <label> I want to copy the data from: </label>
-                            <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0"
+                            <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0" checked
                                     class="form-check-input radio"> {{ filenamen[0] }} </input> </div>
                             <div class="radiobutton"> <input type="radio" name="option" id="option2" value="file1"
                                     class="form-check-input radio"> {{ filenamen[1] }} </input> </div>
@@ -88,9 +88,15 @@
                     <div class="form-group">
                         <label class="float-left"> To column: </label>
                         <input type="number" name="column2copy" class="form-control">
+
+                        <div class="radiobutton mt-3"> <input type="radio" name="keepdataoption" id="keepdata1" value="keepdata1" checked
+                            class="form-check-input radio"> I want to keep the original data, add the copied values after the original data, this'll ensure the original values in the cells won't be overriden. </div>
+                        <div class="radiobutton mt-3"> <input type="radio" name="keepdataoption" id="keepdata2" value="keepdata2"  
+                            class="form-check-input radio"> I want to override the original values </div>
                     </div>
                     <input type="submit" class="btn btn-primary float-left" value="Submit">
                     <button class="btn btn-danger float-right">  <a href="/">Go back </a> </button>
+
                 </form>
             </div>
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">

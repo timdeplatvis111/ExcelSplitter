@@ -29,6 +29,9 @@ a, b, c, d = '', '', '', ''
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    yeeticuspanolius = 'FuckingNormies'
+    print(yeeticuspanolius[0:5])
+
     registerform = RegistrationForm()
     if registerform.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(registerform.password.data).decode('utf-8')
@@ -208,6 +211,7 @@ def upload():
 def convert():
     #try:
         #TODO: Invalid Literal for Int() Base 10 fixen, denk een check invoeren voor als de form leeg is
+        #En met Javascript validatie zorgen dat je niet van een groter getal naar een kleiner getal kan matchen, dus string[5:2]
 
         userfolder = current_user.username
         #Loopt door het alfabet heen en assigned zo een nummer naar elk letter, A = 1, B = 2, etc
@@ -260,7 +264,7 @@ def convert():
 
         if partcolumn1 == '' or partcolumn2 == '':
             partcolumn1 = 0 
-            partcolumn2 = 1000
+            partcolumn2 = 100000
 
         partcolumn1 = int(partcolumn1)
         partcolumn2 = int(partcolumn2)
@@ -268,68 +272,116 @@ def convert():
         sheet1column = values[column1]
         sheet2column = values[column2]
 
+        keepdataoption = request.form['keepdataoption']
+
         #Deze code looped door de opgegeven column in bestand 1 (for cell in sheet1[sheet1column]:I = cell.row) en pakt de value van de eerste row in de opgegeven columns
         #sheet1value = sheet1.cell(row=I, column=column1).value, I is gelijk aan de huidige cell's row
         #Dan gaat het naar de 2e for statement, hier gebeurt hetzelfde alleen checkt het nu of de de gevonden value gelijk is aan de value in het eerste bestand
 
         t = time.process_time()
         loops = 0
+        errorloops = 0
 
         print(partcolumn1)
         print(partcolumn2)
 
         if option == 'file0':
-            filename = filenaam1
+            filename =  filenaam1
 
             for cell in sheet1[sheet1column]:
-                filename = filenaam2
-                I = cell.row
-                sheet1value = sheet1.cell(row=I, column=column1).value
-                print(sheet1value)
-                #time.sleep(5)
-                if sheet1value != None:
-                    sheet1value = sheet1value[partcolumn1:partcolumn2]
-
-                for cell in sheet2[sheet2column]:
-                    E = cell.row
-                    sheet2value = sheet2.cell(row=E, column=column2).value
-                    print(sheet2value)
+                try:
+                    filename = filenaam2
+                    I = cell.row
+                    sheet1value = sheet1.cell(row=I, column=column1).value
+                    print(sheet1value)
                     #time.sleep(5)
-                    if sheet2value != None:
-                        sheet2value = sheet2value[partcolumn1:partcolumn2]
+                    if sheet1value != None:
+                        try:
+                            sheet1value = sheet1value[partcolumn1:partcolumn2]
+                        except:
+                            print("Out of range")
+                            pass
 
-                    if sheet1value == sheet2value:
-                        sheet1copyvalue = sheet1.cell(row=I, column=column1copy).value
-                        sheet2.cell(row=E, column=column2copy, value=sheet1copyvalue)
-                        loops +=1
-                    else:
-                        loops +=1
+                    for cell in sheet2[sheet2column]:
+                        E = cell.row
+                        sheet2value = sheet2.cell(row=E, column=column2).value
+                        print(sheet2value)
+                        #time.sleep(5)
+                        if sheet2value != None:
+                            try:
+                                sheet2value = sheet2value[partcolumn1:partcolumn2]
+                            except: 
+                                print("Out of range")
+                                pass
+
+                        if sheet1value == sheet2value:
+                            sheet1copyvalue = sheet1.cell(row=I, column=column1copy).value
+                            if keepdataoption == 'keepdata1':
+                                #Dit copied nog de matchende value, niet de copy value
+                                keepdatacell = sheet2.cell(row=E, column=column2copy).value
+                                keepdatacell = keepdatacell + sheet1copyvalue
+                                sheet2.cell(row=E, column=column2copy, value=keepdatacell)
+                                loops +=1
+                            else:
+                                sheet2.cell(row=E, column=column2copy, value=sheet1copyvalue)
+                                loops +=1
+                        else:
+                            loops +=1
+                except:
+                    print('F')
+                    print('sheet1value')
+                    print(sheet1value)
+                    print('sheet2value')
+                    print(sheet2value)
+                    errorloops +=1
 
         elif option == 'file1':
             filename = filenaam2
 
             for cell in sheet2[sheet2column]:
-                I = cell.row
-                sheet2value = sheet2.cell(row=I, column=column2).value
-                print(sheet2value)
-                #time.sleep(5)
-                if sheet2value != None:
-                    sheet2value = sheet2value[partcolumn1:partcolumn2]
-
-                for cell in sheet1[sheet1column]:
-                    E = cell.row
-                    sheet1value = sheet1.cell(row=E, column=column1).value
-                    print(sheet1value)
+                try:
+                    I = cell.row
+                    sheet2value = sheet2.cell(row=I, column=column2).value
+                    print(sheet2value)
                     #time.sleep(5)
-                    if sheet1value != None:
-                        sheet1value = sheet1value[partcolumn1:partcolumn2]
-                    
-                    if sheet2value == sheet1value:
-                        sheet1copyvalue = sheet2.cell(row=I, column=column1copy).value
-                        sheet1.cell(row=E, column=column2copy, value=sheet1copyvalue)
-                        loops +=1
-                    else:
-                        loops +=1
+                    if sheet2value != None:
+                        try:
+                            sheet2value = sheet2value[partcolumn1:partcolumn2]
+                        except:
+                            print("Out of range")
+                            pass
+
+                    for cell in sheet1[sheet1column]:
+                        E = cell.row
+                        sheet1value = sheet1.cell(row=E, column=column1).value
+                        print(sheet1value)
+                        #time.sleep(5)
+                        if sheet1value != None:
+                            try:
+                                sheet1value = sheet1value[partcolumn1:partcolumn2]
+                            except:
+                                print("Out of range")
+                                pass
+
+                        if sheet2value == sheet1value:
+                            sheet1copyvalue = sheet2.cell(row=I, column=column1copy).value
+                            if keepdataoption == 'keepdata1':
+                                keepdatacell = sheet1.cell(row=E, column=column2copy).value
+                                keepdatacell = keepdatacell + sheet1copyvalue
+                                sheet1.cell(row=E, column=column2copy, value=keepdatacell)
+                                loops +=1
+                            else:
+                                sheet1.cell(row=E, column=column2copy, value=sheet1copyvalue)
+                                loops +=1
+                        else:
+                            loops +=1
+                except:
+                    print('F')
+                    print('sheet1value')
+                    print(sheet1value)
+                    print('sheet2value')
+                    print(sheet2value)
+                    errorloops +=1
 
         if option == 'file0':
             if (os.path.exists(f'files/{userfolder}')):
@@ -355,6 +407,7 @@ def convert():
         #Dit zorgt er voor dat de time en het aantal loops gerendered worden in de template 
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
+        flash(errorloops, 'errorloops')
 
         if (os.path.exists(f'files/{userfolder}/converted')):
             print('Converted yeet')

@@ -267,10 +267,22 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     {% endwith %}
                 </div>
 
+                <!-- Voor de loops message -->
                 {% with loops = get_flashed_messages(category_filter=["loops"]) %}
                 {% if loops %}
                 <div class="alert-message block-message loops">
                     {%- for msg in loops %}
+                    <p> The program went through {{ msg }} iterations </p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de errorloops message -->
+                {% with errorloops = get_flashed_messages(category_filter=["errorloops"]) %}
+                {% if errorloops %}
+                <div class="alert-message block-message loops">
+                    {%- for msg in errorloops %}
                     <p> The program went through {{ msg }} iterations </p>
                     {% endfor -%}
                 </div>
