@@ -26,7 +26,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
+        <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color: #2A3964;">
             <a class="navbar-brand" href="#"> 
                 <img src="../static/images/logo.png">
             </a>
@@ -224,10 +224,11 @@ Also even de layour fixen, er zitten nu blank spaces op de page
     </div>
 
     <div class="container-fluid">
+    <div id="particles-js"></div>
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
                 {% if current_user.is_authenticated %}
                 <p> Currently only .xlsx files are supported </p>
                 <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
@@ -244,7 +245,9 @@ Also even de layour fixen, er zitten nu blank spaces op de page
         </div>
 
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
                 <!-- Voor de time message -->
                 {% with time = get_flashed_messages(category_filter=["time"]) %}
                 {% if time %}
@@ -263,9 +266,9 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     {%- for msg in succes %}
                     <p> The program went through {{ msg }} iterations </p>
                     {% endfor -%}
-                    {% endif %}
-                    {% endwith %}
                 </div>
+                {% endif %}
+                {% endwith %}
 
                 <!-- Voor de loops message -->
                 {% with loops = get_flashed_messages(category_filter=["loops"]) %}
@@ -283,7 +286,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% if errorloops %}
                 <div class="alert-message block-message loops">
                     {%- for msg in errorloops %}
-                    <p> The program went through {{ msg }} iterations </p>
+                    <p> The program skipped over {{ msg }} iterations, this was most likely caused by merged cells. If you're trying to copy data from merged cells, please remove the merged cells first. This is due to a language limitation. </p>
                     {% endfor -%}
                 </div>
                 {% endif %}
@@ -300,21 +303,24 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% endif %}
                 {% endwith %}
 
-                <!-- Voor de invalid file messages-->
+                <!-- Voor de general error messages-->
                 {% with error = get_flashed_messages(category_filter=["error"]) %}
+                {% if fileerror %}
                 <div class="alert-message block-message error">
                     {%- for msg in error %}
-                    <p> Error {{ msg }}
-                    </p>
+                    <p> Error {{ msg }} </p>
                     {% endfor -%}
                 </div>
+                {% endif %}
                 {% endwith %}
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
         </div>
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 fixforparticlesjs">
                 <div class="content-section">
                     {% if current_user.is_authenticated %}
                     <p> This comment section is for providing meaningfull feedback, if you want to see a function added you can comment here </p>
@@ -381,5 +387,15 @@ Also even de layour fixen, er zitten nu blank spaces op de page
     </div>
 </body>
 <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+
+<script>
+
+/* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+particlesJS.load('particles-js', '../static/js/particles.json', function() {
+  console.log('callback - particles.js config loaded');
+});
+
+</script>
 
 </html>

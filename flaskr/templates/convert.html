@@ -23,8 +23,8 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #2A3964;">
-            <a class="navbar-brand" href="#"> 
+        <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color: #2A3964;">
+            <a class="navbar-brand" href="/"> 
                 <img src="../static/images/logo.png">
             </a>
             <div class="collapse navbar-collapse" id="collapsibleNavId">
@@ -33,10 +33,11 @@
         </nav>
     </header>
     <div class="container-fluid">
+        <div id="particles-js"></div>
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
                 <form class="form-horizontal" id="dingetje" method="POST" role="form" enctype="multipart/form-data" action="/convert">
                     <p> This is a very early development version, the program can currently only match values that are
                         exactly alike for example the K numbers </p>
@@ -88,11 +89,27 @@
                     <div class="form-group">
                         <label class="float-left"> To column: </label>
                         <input type="number" name="column2copy" class="form-control">
+                    
+                    <hr> 
 
                         <div class="radiobutton mt-3"> <input type="radio" name="keepdataoption" id="keepdata1" value="keepdata1" checked
                             class="form-check-input radio"> I want to keep the original data, add the copied values after the original data, this'll ensure the original values in the cells won't be overriden. </div>
                         <div class="radiobutton mt-3"> <input type="radio" name="keepdataoption" id="keepdata2" value="keepdata2"  
                             class="form-check-input radio"> I want to override the original values </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <div class="radiobutton mt-3"> <input type="radio" name="colourcells" id="colourcells1" value="colourcells1" checked
+                            class="form-check-input radio"> Keep the original colour </div>
+                        
+                        <div class="radiobutton mt-3"> <input type="radio" name="colourcells" id="colourcells2" value="colourcells2"
+                            class="form-check-input radio"> Fill in the copied data with a color </div>
+
+                        <input name="color1" type="hidden" id="color_value" value="283150">
+                        <button class="jscolor {valueElement: 'color_value'} btn btm-secondary mt-4">Pick a color</button>
+                        
                     </div>
                     <input type="submit" class="btn btn-primary float-left" value="Submit">
                     <button class="btn btn-danger float-right">  <a href="/">Go back </a> </button>
@@ -105,5 +122,16 @@
     </div>
 </body>
 <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/jscolor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+
+<script>
+
+        /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+        particlesJS.load('particles-js', '../static/js/particles.json', function() {
+          console.log('callback - particles.js config loaded');
+        });
+        
+        </script>
 
 </html>

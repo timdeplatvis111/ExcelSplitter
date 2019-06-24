@@ -274,6 +274,14 @@ def convert():
 
         keepdataoption = request.form['keepdataoption']
 
+        #TODO: dit fixen
+        colourcells = request.form['colourcells']
+        color1 = request.form['color1']
+
+        #Zet de kleur van de fill
+        myColour = openpyxl.styles.colors.Color(rgb=color1)
+        colourFill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=myColour)
+
         #Deze code looped door de opgegeven column in bestand 1 (for cell in sheet1[sheet1column]:I = cell.row) en pakt de value van de eerste row in de opgegeven columns
         #sheet1value = sheet1.cell(row=I, column=column1).value, I is gelijk aan de huidige cell's row
         #Dan gaat het naar de 2e for statement, hier gebeurt hetzelfde alleen checkt het nu of de de gevonden value gelijk is aan de value in het eerste bestand
@@ -281,9 +289,6 @@ def convert():
         t = time.process_time()
         loops = 0
         errorloops = 0
-
-        print(partcolumn1)
-        print(partcolumn2)
 
         if option == 'file0':
             filename =  filenaam1
@@ -316,8 +321,9 @@ def convert():
 
                         if sheet1value == sheet2value:
                             sheet1copyvalue = sheet1.cell(row=I, column=column1copy).value
+                            if colourcells == 'colourcells2':
+                                sheet2.cell(row=E, column=column2copy).fill = colourFill
                             if keepdataoption == 'keepdata1':
-                                #Dit copied nog de matchende value, niet de copy value
                                 keepdatacell = sheet2.cell(row=E, column=column2copy).value
                                 keepdatacell = keepdatacell + sheet1copyvalue
                                 sheet2.cell(row=E, column=column2copy, value=keepdatacell)
@@ -365,6 +371,8 @@ def convert():
 
                         if sheet2value == sheet1value:
                             sheet1copyvalue = sheet2.cell(row=I, column=column1copy).value
+                            if colourcells == 'colourcells2':
+                                sheet2.cell(row=E, column=column2copy).fill = colourFill
                             if keepdataoption == 'keepdata1':
                                 keepdatacell = sheet1.cell(row=E, column=column2copy).value
                                 keepdatacell = keepdatacell + sheet1copyvalue
