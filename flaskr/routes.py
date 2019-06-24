@@ -209,7 +209,7 @@ def upload():
 
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
-    #try:
+    try:
         #TODO: Invalid Literal for Int() Base 10 fixen, denk een check invoeren voor als de form leeg is
         #En met Javascript validatie zorgen dat je niet van een groter getal naar een kleiner getal kan matchen, dus string[5:2]
 
@@ -432,34 +432,34 @@ def convert():
         session.pop('_flashes', None) 
 
     #Dit zijn alle exceptions voor verschillende errors, meeste errors zouden niet kunnen gebeuren, maar staan er toch just to be sure
-    #except KeyError as a:
-    #    return redirect("/")
-    #    return render_template('index.html')
-    #    session.pop('_flashes', None)
+    except KeyError as a:
+        return redirect("/")
+        return render_template('index.html')
+        session.pop('_flashes', None)
 
-    #except NameError as b:
-    #    flash(str(b), 'error')
-    #    return redirect("/")
-    #    return render_template('index.html', error=error)
-    #    session.pop('_flashes', None)
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
 
-    #except ValueError as c:
-    #    flash(str(c), 'error')
-    #    return redirect("/")
-    #    return render_template('index.html', error=error)
-    #    session.pop('_flashes', None)
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
 
-    #except TypeError as f:
-    #    flash(str(f), 'error')
-    #    return redirect("/")
-    #    return render_template('index.html', error=error)
-    #    session.pop('_flashes', None)
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
 
-    #except:
-    #    message = 'This is never supposed to happen, Please contact the administrator if it does'
-    #    flash(str(message), 'error')
-    #    return redirect("/")
-    #    return render_template('index.html', error=error)
-    #    session.pop('_flashes', None)
+    except:
+        message = 'This is never supposed to happen, Please contact the administrator if it does'
+        flash(str(message), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
 
 
