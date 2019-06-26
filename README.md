@@ -5,7 +5,7 @@ A simpel Excel Tool meant to automate some of the boring Excel work.
 
 ## Installation Instructions
 
-Clone/download the master build from Github.  
+Clone/download the DEVELOPMENT build from Github.
 
 Navigate to the top folder, so the folder with the file: 'run.py'  
 
@@ -41,6 +41,8 @@ PHP (for MySQL)
 ## Extra things
 
 * I hope this'll be used as an example for someone trying to learn Flask
+
+* The master build is configured for Pythonanywhere, so that version won't work out of the box because of the different database configuration/login. Please clone the development build instead.
 
 * If you are that person, have fun copy pasting my code, don't worry its free :)
 
