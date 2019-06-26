@@ -25,129 +25,193 @@ a, b, c, d = '', '', '', ''
 
 #TODO: Dit even uncommenten nog  
 #{{ form.remember(class="form-check-input") }}
-#{{ form.remember.label(class="form-check-label") }} 
+#{{ form.remember.label(class="form-check-label") }}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    yeeticuspanolius = 'FuckingNormies'
-    print(yeeticuspanolius[0:5])
-
-    registerform = RegistrationForm()
-    if registerform.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(registerform.password.data).decode('utf-8')
-        user = User(username=registerform.username.data, email=registerform.email.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('index'))
-
-    loginform = LoginForm()
-    if loginform.validate_on_submit():
-        user = User.query.filter_by(email=loginform.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, loginform.password.data):
-            login_user(user, remember=loginform.remember.data)
-            #next_page = request.args.get('next')
-            #return redirect(next_page) if next_page else redirect(url_for('index'))
+    try:
+        registerform = RegistrationForm()
+        if registerform.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(registerform.password.data).decode('utf-8')
+            user = User(username=registerform.username.data, email=registerform.email.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+            flash('Your account has been created! You are now able to log in', 'success')
             return redirect(url_for('index'))
+
+        loginform = LoginForm()
+        if loginform.validate_on_submit():
+            user = User.query.filter_by(email=loginform.email.data).first()
+            if user and bcrypt.check_password_hash(user.password, loginform.password.data):
+                login_user(user, remember=loginform.remember.data)
+                #next_page = request.args.get('next')
+                #return redirect(next_page) if next_page else redirect(url_for('index'))
+                return redirect(url_for('index'))
+            else:
+                flash('Login Unsuccessful. Please check email and password', 'danger')
+
+        if current_user.is_authenticated:
+            userfolder = current_user.username
+            converteduserfiles = []
+            userfiles = []
+
+            path = f'files/{userfolder}/'
+
+            if (os.path.exists(f'files/{userfolder}/converted')):
+                pathtoconverted = f'files/{userfolder}/converted'
+            else:
+                os.mkdir(f'files/{userfolder}')
+                os.mkdir(f'files/{userfolder}/converted')
+                pathtoconverted = f'files/{userfolder}/converted'
+
+            for filename in os.listdir(path):
+                userfiles.append(filename)
+
+            for filename in os.listdir(pathtoconverted):
+                converteduserfiles.append(filename)
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    """
-    accountform = AccountForm()
-    if accountform.validate_on_submit():
-        #if accountform.picture.data:
-        #    picture_file = save_picture(accountform.picture.data)
-        #    current_user.image_file = picture_file
-        current_user.username = accountform.username.data
-        current_user.email = accountform.email.data
-        db.session.commit()
-        flash('Your account has been updated!', 'success')
-        return redirect(url_for('index'))
-    """
+            filename = ''
+            path = ''
+            userfiles = '', ''
+            converteduserfiles = ''
+            pathtoconverted = ''
+            session['filename'] = filename
+            session['path'] = path
+            session['userfiles[]'] = userfiles
+            session['converteduserfiles[]'] = converteduserfiles
+            session['pathtoconverted'] = pathtoconverted
 
-    if current_user.is_authenticated:
-        userfolder = current_user.username
-        converteduserfiles = []
-        userfiles = []
-
-        path = f'files/{userfolder}/'
-
-        if (os.path.exists(f'files/{userfolder}/converted')):
-            pathtoconverted = f'files/{userfolder}/converted'
-        else:
-            os.mkdir(f'files/{userfolder}')
-            os.mkdir(f'files/{userfolder}/converted')
-            pathtoconverted = f'files/{userfolder}/converted'
-
-        for filename in os.listdir(path):
-            userfiles.append(filename)
-
-        for filename in os.listdir(pathtoconverted):
-            converteduserfiles.append(filename)
-    else:
-        filename = ''
-        path = ''
-        userfiles = '', ''
-        converteduserfiles = ''
-        pathtoconverted = ''
         session['filename'] = filename
         session['path'] = path
         session['userfiles[]'] = userfiles
         session['converteduserfiles[]'] = converteduserfiles
         session['pathtoconverted'] = pathtoconverted
 
-    session['filename'] = filename
-    session['path'] = path
-    session['userfiles[]'] = userfiles
-    session['converteduserfiles[]'] = converteduserfiles
-    session['pathtoconverted'] = pathtoconverted
-
-    #elif request.method == 'GET':
-        #if current_user.is_authenticated:
-            #accountform.username.data = current_user.username
-            #accountform.email.data = current_user.email
-        #else:
-            #return redirect(url_for('index'))
-            #return render_template('index.html', title='Account', image_file=image_file, accountform=accountform, loginform=loginform, registerform=registerform)
-    #image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    #return render_template('index.html', title='Account', image_file=image_file, accountform=accountform, loginform=loginform, registerform=registerform)
-    #return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform)
-
-    postform = PostForm()
-    if postform.validate_on_submit():
-        post = Post(title=postform.title.data, content=postform.content.data, author=current_user)
-        db.session.add(post)
-        db.session.commit()
-        flash('Your post has been created!', 'success')
-        return redirect(url_for('index'))
+        postform = PostForm()
+        if postform.validate_on_submit():
+            post = Post(title=postform.title.data, content=postform.content.data, author=current_user)
+            db.session.add(post)
+            db.session.commit()
+            flash('Your post has been created!', 'success')
+            return redirect(url_for('index'))
     
-    posts = Post.query.all()
+        posts = Post.query.all()
 
-    environment = jinja2.Environment(os)
-    environment.filters['os'] = os
+        environment = jinja2.Environment(os)
+        environment.filters['os'] = os
 
-    #return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, os=os)
-    return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
-    #return render_template('index.html', title='Account', pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], os=os, accountform=accountform, loginform=loginform, registerform=registerform, postform=postform, posts=posts)
+        return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
+
+    #Dit zijn alle exceptions voor verschillende errors, meeste errors zouden niet kunnen gebeuren, maar staan er toch just to be sure
+    except KeyError as a:
+        return redirect("/")
+        return render_template('index.html')
+        session.pop('_flashes', None)
+
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except:
+        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        flash(str(message), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
 
 @app.route('/files', methods=['GET', 'POST'])
 def files():
-    filename = session.get('filename')
-    path = session.get('path')
-    userfiles = session.get('userfiles[]')
+    try: 
+        filename = session.get('filename')
+        path = session.get('path')
+        userfiles = session.get('userfiles[]')
 
-    for index, filename in enumerate(userfiles):
-        print('yeet')
-    return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
+        for index, filename in enumerate(userfiles):
+            print('yeet')
+        return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
+        
+    except KeyError as d:
+        flash(str(d), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except:
+        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        flash(str(message), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
 
 @app.route('/files2', methods=['GET', 'POST'])
 def files2():
-    filename = session.get('filename')
-    converteduserfiles = session.get('converteduserfiles[]')
-    pathtoconverted = session.get('pathtoconverted')
+    try: 
+        filename = session.get('filename')
+        converteduserfiles = session.get('converteduserfiles[]')
+        pathtoconverted = session.get('pathtoconverted')
 
-    for index, filename in enumerate(converteduserfiles):
-        print('yeet2')
-    return send_from_directory(f'../{pathtoconverted}', converteduserfiles[index], as_attachment=True)
+        for index, filename in enumerate(converteduserfiles):
+            print('yeet2')
+        return send_from_directory(f'../{pathtoconverted}', converteduserfiles[index], as_attachment=True)
+
+    except KeyError as d:
+        flash(str(d), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except:
+        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        flash(str(message), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
 
 @app.route('/logout')
 def logout():
@@ -201,9 +265,29 @@ def upload():
     except KeyError as d:
         flash(str(d), 'error')
         return redirect("/")
-        return render_template('index.html')
+        return render_template('index.html', error=error)
+
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
 
     except:
+        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
 
@@ -274,7 +358,6 @@ def convert():
 
         keepdataoption = request.form['keepdataoption']
 
-        #TODO: dit fixen
         colourcells = request.form['colourcells']
         color1 = request.form['color1']
 

@@ -45,7 +45,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yeet@localhost/splitter'
 #Zet de maximum allowed file size naar 16 MB
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-#Zet de debug mode naar true, dit moet op false zijn in de live version
+#Zet de debug mode naar true, dit moet op false staan in de live version
 app.config['DEBUG_MODE'] = True
 
 #Zet de enviroment naar development, moet uit in de live version
