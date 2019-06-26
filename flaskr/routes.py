@@ -141,9 +141,9 @@ def files():
         userfiles = session.get('userfiles[]')
 
         for index, filename in enumerate(userfiles):
-            print('yeet')
+            print('nice')
         return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
-        
+
     except KeyError as d:
         flash(str(d), 'error')
         return redirect("/")
@@ -298,11 +298,6 @@ def convert():
         #En met Javascript validatie zorgen dat je niet van een groter getal naar een kleiner getal kan matchen, dus string[5:2]
 
         userfolder = current_user.username
-        #Loopt door het alfabet heen en assigned zo een nummer naar elk letter, A = 1, B = 2, etc
-        #Dit is nog een probleem, dit gaat alleen van column A tot X
-        values = dict()
-        for index, letter in enumerate(string.ascii_lowercase):
-            values[index] = letter
 
         #Pakt de filenamen array uit de session
         filenamen = session.get('filenamen[]')
