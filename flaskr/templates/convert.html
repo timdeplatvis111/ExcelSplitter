@@ -33,7 +33,6 @@
         </nav>
     </header>
     <div class="container-fluid">
-        <div id="particles-js"></div>
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
@@ -122,18 +121,23 @@
             </div>
         </div>
     </div>
+    <canvas class="background"></canvas>
 </body>
 <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
 <script src="{{ url_for('static', filename='js/jscolor.js') }}"></script>
-<script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
 
 <script>
 
-        /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-        particlesJS.load('particles-js', '../static/js/particles.json', function() {
-          console.log('callback - particles.js config loaded');
-        });
-        
-        </script>
+window.onload= function() 
+{
+    var particles = Particles.init({
+	selector: '.background',
+    color: ['#DA0463', '#404B69', '#DBEDF3'],
+    connectParticles: true,
+    maxParticles: 200,
+})};
+
+</script>
 
 </html>

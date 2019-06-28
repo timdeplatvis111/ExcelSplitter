@@ -1,5 +1,6 @@
 body{
     overflow-x: hidden;
+    background-color: #f8f9fa;
 }
 
 .radiobuttons
@@ -30,34 +31,31 @@ body{
     display: none;
 }
 
-.fixforparticlesjs
-{
-    z-index: 10;
-}
-
-#particles-js canvas 
-{
-    display: block;
-    vertical-align: bottom;
-    -webkit-transform: scale(1);
-    -ms-transform: scale(1);
-    transform: scale(1);
-    opacity: 1;
-    -webkit-transition: opacity .8s ease, -webkit-transform 1.4s ease;
-    transition: opacity .8s ease, transform 1.4s ease
-}
-
-#particles-js 
-{
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    z-index: 5;
-    top: 0;
-    left: 0;
-}
-
 .red
 {
     color: red;
+}
+
+.background 
+{
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1604px;
+    width: 1200px;
+}
+
+.fixforparticlesjs
+{
+    z-index: 10;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-right-color: grey;
+
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-left-color: grey;
 }

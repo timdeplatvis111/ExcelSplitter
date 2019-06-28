@@ -22,13 +22,13 @@ from werkzeug.utils import *
 
 app = Flask(__name__)
 
-#Zet het filetypen naar .xlsx, een standaard Excel formaat. Andre soort Excel bestanden zijn niet supported door issues met openpyxl
+#Sets the allowed filetype to .xlsx files, openpyxl doesn't support any other filetypes like .csv
 ALLOWED_EXTENSIONS = set(['xlsx'])
 def allowed_file(filename):
     return '.' in filename and \
     filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-#Instellingen die gebruikt worden voor de hele app
+#Settings and important variables used by the entire apps
 app.config.from_mapping(
     SECRET_KEY = b'5t=759f9$gfdhpf047]8y87^4#5gq8*3nft8503#mgtrhsuooer9',
     UPLOADED_FILES = f'files/',
@@ -38,27 +38,28 @@ app.config.from_mapping(
     FLASK_ENV= 'development',
 )
 
-#Connect naar de MYsql database met flask sqlalchemy
-#VERANDER HET PASSWORD, HET PASSWORD IS NU YEET
+#Sets the right mysql url to connect to
+#Change the password if you want to run this application yourself, your database password probably isn't yeet
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:yeet@localhost/splitter'
 
-#Zet de maximum allowed file size naar 16 MB
+#Sets the maximum allowed filesize to 16mb
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-#Zet de debug mode naar true, dit moet op false staan in de live version
+#Sets the debug mode to true, because this application is still in development
 app.config['DEBUG_MODE'] = True
 
-#Zet de enviroment naar development, moet uit in de live version
+#Sets the enviroment to the development enviroment
 app.config['FLASK_ENV'] = 'development'
 
+#Defines the login manager to the app variable, otherwise it won't work
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
-#Initialseerd de database en bcrypt
+#Initializes the database and bcrypt modules
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-#Import the routes uit routes.py van de folder flaskr
+#Imports the routes.py file
 from flaskr import routes
 

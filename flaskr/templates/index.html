@@ -179,7 +179,6 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -223,7 +222,6 @@ Also even de layour fixen, er zitten nu blank spaces op de page
     </div>
 
     <div class="container-fluid">
-    <div id="particles-js"></div>
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
             </div>
@@ -305,10 +303,35 @@ Also even de layour fixen, er zitten nu blank spaces op de page
 
                 <!-- Voor de general error messages-->
                 {% with error = get_flashed_messages(category_filter=["error"]) %}
-                {% if fileerror %}
+                {% if error %}
                 <div class="alert-message block-message error">
                     <p> An error occurded, the error message: </p>
                     {%- for msg in error %}
+                    <p> Error {{ msg }} </p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de value error messages, dus als er niets wordt ingevuld-->
+                {% with valueError = get_flashed_messages(category_filter=["valueError"]) %}
+                {% if valueError %}
+                <div class="alert-message block-message error">
+                    <p> An error occurded, the error message: </p>
+                    {%- for msg in valueError %}
+                    <p> Error {{ msg }} </p>
+                    {% endfor -%}
+                    <p> This most likely means that you left one of the fields blank</p>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de invalid login messages-->
+                {% with loginError = get_flashed_messages(category_filter=["loginError"]) %}
+                {% if loginError %}
+                <div class="alert-message block-message error">
+                    <p> An error occurded, the error message: </p>
+                    {%- for msg in loginError %}
                     <p> Error {{ msg }} </p>
                     {% endfor -%}
                 </div>
@@ -385,18 +408,25 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
         </div>
-    </div>
+    </div> 
+<canvas class="background"></canvas>
 </body>
 <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
-<script src="{{ url_for('static', filename='js/particles.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
 
 <script>
 
-/* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-particlesJS.load('particles-js', '../static/js/particles.json', function() {
-  console.log('callback - particles.js config loaded');
-});
+window.onload= function() 
+{
+    var particles = Particles.init({
+	selector: '.background',
+    color: ['#DA0463', '#404B69', '#DBEDF3'],
+    connectParticles: true,
+    maxParticles: 200,
+})};
 
 </script>
+
+
 
 </html>

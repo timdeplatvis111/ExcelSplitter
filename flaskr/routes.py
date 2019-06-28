@@ -19,25 +19,38 @@ from forms import RegistrationForm, LoginForm, PostForm
 from flaskr.models import User, Post
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_sqlalchemy import *
+from sqlalchemy import *
 
-#Variables voor de exception catchers, moeten eerst een value hebben for some reason
+#For the exception catchers, for some reason they need a value first.
 a, b, c, d = '', '', '', ''
-
-#TODO: Dit even uncommenten nog  
-#{{ form.remember(class="form-check-input") }}
-#{{ form.remember.label(class="form-check-label") }}
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     try:
         registerform = RegistrationForm()
         if registerform.validate_on_submit():
+            checkUsername = registerform.username.data
+            checkEmail = registerform.email.data
             hashed_password = bcrypt.generate_password_hash(registerform.password.data).decode('utf-8')
             user = User(username=registerform.username.data, email=registerform.email.data, password=hashed_password)
-            db.session.add(user)
-            db.session.commit()
-            flash('Your account has been created! You are now able to log in', 'success')
-            return redirect(url_for('index'))
+            usernameExists = db.session.query(db.session.query(User).filter_by(username=checkUsername).exists()).scalar()
+            emailExists = db.session.query(db.session.query(User).filter_by(email=checkEmail).exists()).scalar()
+            if usernameExists or emailExists:
+                message = 'That username or email is already taken'
+                flash(str(message), 'loginError')
+                return redirect("/")
+                return render_template('index.html', loginError=loginError)
+            else:
+                db.session.add(user)
+                db.session.commit()
+                message = 'Registration succesfull!'
+                flash(str(message), 'loginError')
+                return redirect("/")
+                return render_template('index.html', loginError=loginError)
+
+            return redirect("/")
+            return render_template('index.html', loginError=loginError)
 
         loginform = LoginForm()
         if loginform.validate_on_submit():
@@ -48,7 +61,10 @@ def index():
                 #return redirect(next_page) if next_page else redirect(url_for('index'))
                 return redirect(url_for('index'))
             else:
-                flash('Login Unsuccessful. Please check email and password', 'danger')
+                message = 'Invalid login, please check your login values and try again'
+                flash(str(message), 'loginError')
+                return redirect("/")
+                return render_template('index.html', loginError=loginError)
 
         if current_user.is_authenticated:
             userfolder = current_user.username
@@ -102,7 +118,7 @@ def index():
 
         return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
 
-    #Dit zijn alle exceptions voor verschillende errors, meeste errors zouden niet kunnen gebeuren, maar staan er toch just to be sure
+    #All exception catchers, most of these will never happen but they're there just to be sure.
     except KeyError as a:
         return redirect("/")
         return render_template('index.html')
@@ -220,15 +236,14 @@ def logout():
 
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
-    #Dit hele ding zit in een try catch systeem om elke soort exploit te voorkomen, ik wil geen random errors op de website. 
     try: 
-        #Pakt de files uit de form
+        #Takes the files from the forms
         request.files['uploadedfile1']
         request.files['uploadedfile2']
 
         userfolder = current_user.username
 
-        #Maakt een list van de 2 geuploade files, zodat we er later door heen kunnen loopen 
+        #Creates a list from the files so we can loop through them later
         #yeet = request.files.getlist('uploadedfiles')
         yeet1 = request.files.getlist('uploadedfile1')
         yeet2 = request.files.getlist('uploadedfile2')
@@ -236,13 +251,13 @@ def upload():
         yeet3 = yeet1 + yeet2
         filenamen = []
 
-        #Loopt door de filelist heen
+        #Loops through the filelist
         for file in yeet3:     
             files = request.files.to_dict()
             filename = secure_filename(file.filename)
             filenamen.append(filename)
 
-            #Checkt of het type file klopt, er mogen alleen .xlsx files geupload worden
+            #Checks if the uploaded file is an .xlxs file
             if file and allowed_file(filename):
                 if (os.path.exists(f'files/{userfolder}')):
                     file.save(f'files/{userfolder}/{filename}')
@@ -258,7 +273,7 @@ def upload():
             flash('Please upload 2 Excel files', 'error')
             return render_template('convert.html', error=error)    
         else:
-            #Zet de filenamen array in de session voor later gebruik 
+            #Puts the filenames into a session for use in the next route
             session['filenamen[]'] = filenamen
             return render_template('convert.html', filenamen=session['filenamen[]'])    
 
@@ -294,59 +309,64 @@ def upload():
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
     try:
-        #TODO: Invalid Literal for Int() Base 10 fixen, denk een check invoeren voor als de form leeg is
-        #En met Javascript validatie zorgen dat je niet van een groter getal naar een kleiner getal kan matchen, dus string[5:2]
+        values = dict()
+        for index, letter in enumerate(string.ascii_lowercase):
+            values[index] = letter
 
+        #Sets the userfolder equal to the logged in user's username.
         userfolder = current_user.username
 
-        #Pakt de filenamen array uit de session
+        #Gets the filenamen list from the session
         filenamen = session.get('filenamen[]')
 
-        #Split de array in 2 variabelen voor later gebruik
+        #Splits the array into 2 seperate variables
         filenaam1 = filenamen[0]
         filenaam2 = filenamen[1]
 
-        #column1 = de eerste column die je wilt matchen uit de form (filenaam1)
-        #column2 = de tweede column die je wilt matchen uit de form (filenaam2)
+        #column1 = The first column you want to compare, generated from the form (filenaam1)
+        #column2 = The second column you want to compare, generated from the form (filenaam2)
         column1 = request.form['column1']
         column2 = request.form['column2']
 
-        #option = de file waarvan je de values wilt kopieren uit de form
+        #option = Variable for deciding which file you want to copy values from
         option = request.form['option']
 
-        #column1copy = de column waarvan je de values wilt kopieren uit de form
-        #column2copy = de column waar naar je de values wilt kopieren uit de form
+        #column1copy = The column where it copies the values from 
+        #column2copy = The column where it copies the values to
         column1copy = request.form['column1copy']
         column2copy = request.form['column2copy']
 
-        #part1column =  de eerste positie van het field waar je van wilt matchen
-        #part2column = de laatste positie van het field waar je van wilt matchen
+        #part1column = The first position for the string matching system
+        #part2column = The second position for the string matching system
 
-        #Voorbeeld: part1column = 5                           ↓ 
-        #Dan matched het de 2e character in de field, dus KOI12345678
+        #Example: part1column = 5, part2column = 7                        
+        #With these values it matches the 6th character (counting from 1) to the 8th character (counting from 1)
         partcolumn1 = request.form['partcolumn1']
         partcolumn2 = request.form['partcolumn2']
 
-        #Zet beide workbooks als de active workbooks, dit moet om het te kunnen gebruiken in OpenpyXL
+        #Sets both workbooks as active, so we can manipulate them using openpyxl
         workbook1 = load_workbook(filename=(f"files/{userfolder}/{filenaam1}"))
         sheet1 = workbook1.active
 
         workbook2 = load_workbook(filename=(f"files/{userfolder}/{filenaam2}"))
         sheet2 = workbook2.active
 
-        #Convert deze variabelen naar integrers voor later gebruik
+        #Converts these values to integers for later use
         column1copy = int(column1copy)
         column2copy = int(column2copy)
 
         column1 = int(column1)
         column2 = int(column2)
 
+        #Checks if these values are empty, then sets them to a high value to prevent errors
         if partcolumn1 == '' or partcolumn2 == '':
             partcolumn1 = 0 
             partcolumn2 = 100000
-
-        partcolumn1 = int(partcolumn1)
-        partcolumn2 = int(partcolumn2)
+            partcolumn1 = int(partcolumn1)
+            partcolumn2 = int(partcolumn2)
+        else:
+            partcolumn1 = int(partcolumn1)
+            partcolumn2 = int(partcolumn2)
 
         sheet1column = values[column1]
         sheet2column = values[column2]
@@ -356,18 +376,16 @@ def convert():
         colourcells = request.form['colourcells']
         color1 = request.form['color1']
 
-        #Zet de kleur van de fill
+        #Sets the colour of the cell coloring feature.
         myColour = openpyxl.styles.colors.Color(rgb=color1)
         colourFill = openpyxl.styles.fills.PatternFill(patternType='solid', fgColor=myColour)
 
-        #Deze code looped door de opgegeven column in bestand 1 (for cell in sheet1[sheet1column]:I = cell.row) en pakt de value van de eerste row in de opgegeven columns
-        #sheet1value = sheet1.cell(row=I, column=column1).value, I is gelijk aan de huidige cell's row
-        #Dan gaat het naar de 2e for statement, hier gebeurt hetzelfde alleen checkt het nu of de de gevonden value gelijk is aan de value in het eerste bestand
-
+        #Defines some variables for measuring the time, amount of loops, and the amount of skipped loops
         t = time.process_time()
         loops = 0
         errorloops = 0
 
+        #This if can definitely be removed somehow, writing this code twice is really inefficient. 
         if option == 'file0':
             filename =  filenaam1
 
@@ -469,6 +487,7 @@ def convert():
                     print(sheet2value)
                     errorloops +=1
 
+        #Saves the files to our userfolder
         if option == 'file0':
             if (os.path.exists(f'files/{userfolder}')):
                 workbook1.save(f'files/{userfolder}/{filenaam1}')
@@ -487,10 +506,10 @@ def convert():
                 workbook1.save(f'files/{userfolder}/{filenaam1}')
                 workbook2.save(f'files/{userfolder}/{filenaam2}')
 
-        #Measured hoe lang het duurde voor de code om door de logica te gaan
+        #Measured the time it takes for the program to go through all the code above
         elapsed_time = time.process_time() - t
 
-        #Dit zorgt er voor dat de time en het aantal loops gerendered worden in de template 
+        #Renders the amount of loops, errorloops and the amount of time it took to go through all the code above
         flash(elapsed_time, 'time')
         flash(loops, 'loops')
         flash(errorloops, 'errorloops')
@@ -507,37 +526,32 @@ def convert():
             workbook1.save(f'files/{userfolder}/converted/{filenaam1}')
             return send_from_directory(f'../files/{userfolder}', filenaam1, as_attachment=True)
 
-        session.pop('_flashes', None) 
-
-    #Dit zijn alle exceptions voor verschillende errors, meeste errors zouden niet kunnen gebeuren, maar staan er toch just to be sure
+    #Exception catchers, just to be sure
     except KeyError as a:
+        flash(str(b), 'error')
         return redirect("/")
-        return render_template('index.html')
-        session.pop('_flashes', None)
+        return render_template('index.html', error=error)
 
     except NameError as b:
         flash(str(b), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
-        session.pop('_flashes', None)
 
     except ValueError as c:
-        flash(str(c), 'error')
+        flash(str(c), 'valueError')
         return redirect("/")
-        return render_template('index.html', error=error)
-        session.pop('_flashes', None)
+        return render_template('index.html', valueError=valueError)
 
     except TypeError as f:
         flash(str(f), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
-        session.pop('_flashes', None)
 
     except:
         message = 'This is never supposed to happen, Please contact the administrator if it does'
         flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
-        session.pop('_flashes', None)
 
+    session.pop('_flashes', None) 
 
