@@ -39,7 +39,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             {% else %}
             <div class="navbar-login ml-auto mr-4">
                 <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#loginModal">
-                    Please login/register here! </button>
+                    Login/register here! </button>
             </div>
             {% endif %}
         </nav>
@@ -203,7 +203,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                                     <!--Moet loopen door de userfiles array en zo aparte links voor alle files generen-->
                                     <p> Your previously uploaded files:</p>
                                     {% for filename in userfiles %}
-                                        <a href="{{ url_for('files') }}"> {{ userfiles[loop.index0] }} </a> <br> 
+                                        <h3><a class="mr-2 mt-4" href="{{url_for('files', filename=userfiles[loop.index0])}}" method="POST">{{ userfiles[loop.index0] }} </a></h3>
                                     {% endfor %}
 
                                     <p> Your previously converted files: </p>
@@ -283,7 +283,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% if errorloops %}
                 <div class="alert-message block-message loops">
                     {%- for msg in errorloops %}
-                    <p> The program skipped over {{ msg }} iterations, this was most likely caused by merged cells. If you're trying to copy data from merged cells, please remove the merged cells first. This is due to a language limitation. </p>
+                    <p> The program skipped over {{ msg }} iterations, this was most likely caused by merged cells. If you're trying to copy data from merged cells, please remove the merged cells first.
                     {% endfor -%}
                 </div>
                 {% endif %}
@@ -307,7 +307,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 <div class="alert-message block-message error">
                     <p> An error occurded, the error message: </p>
                     {%- for msg in error %}
-                    <p> Error {{ msg }} </p>
+                    <p> This value caused an error: {{ msg }}, this could be because the entered value was above the maximum allowed value. If this error persists, please ask the developer </p>
                     {% endfor -%}
                 </div>
                 {% endif %}
@@ -321,7 +321,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     {%- for msg in valueError %}
                     <p> Error {{ msg }} </p>
                     {% endfor -%}
-                    <p> This most likely means that you left one of the fields blank</p>
+                    <p> This most likely means that you left one of the fields blank, or that the entered value was too high </p>
                 </div>
                 {% endif %}
                 {% endwith %}
@@ -344,7 +344,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
         <div class="row">
             <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
             </div>
-            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 fixforparticlesjs">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 fixforparticlesjs border-bottom">
                 <div class="content-section">
                     {% if current_user.is_authenticated %}
                     <p> This comment section is for providing meaningfull feedback, if you want to see a function added you can comment here </p>

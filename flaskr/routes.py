@@ -76,15 +76,18 @@ def index():
             if (os.path.exists(f'files/{userfolder}/converted')):
                 pathtoconverted = f'files/{userfolder}/converted'
             else:
-                os.mkdir(f'files/{userfolder}')
+                if not (os.path.exists(f'files/{userfolder}')):
+                    os.mkdir(f'files/{userfolder}')
                 os.mkdir(f'files/{userfolder}/converted')
                 pathtoconverted = f'files/{userfolder}/converted'
 
             for filename in os.listdir(path):
-                userfiles.append(filename)
+                if os.path.isfile and filename != 'converted':
+                    userfiles.append(filename)
 
             for filename in os.listdir(pathtoconverted):
-                converteduserfiles.append(filename)
+                if os.path.isfile:
+                    converteduserfiles.append(filename)
         else:
             filename = ''
             path = ''
@@ -148,17 +151,26 @@ def index():
         return redirect("/")
         return render_template('index.html', error=error)
         session.pop('_flashes', None)
+"""
+@app.route(, methods=['GET', 'POST'])
+def userfiles():
+    filename = session.get('filename')
+    path = session.get('path')
+    userfiles = session.get('userfiles[]')
 
-@app.route('/files', methods=['GET', 'POST'])
-def files():
+    for index, filename in enumerate(userfiles):
+        print('nice')
+    return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
+"""
+
+@app.route('/files/<filename>', methods=['GET', 'POST'])
+def files(filename):
     try: 
-        filename = session.get('filename')
+        #filename = session.get('filename')
         path = session.get('path')
         userfiles = session.get('userfiles[]')
 
-        for index, filename in enumerate(userfiles):
-            print('nice')
-        return send_from_directory(f'../{path}', userfiles[index], as_attachment=True)
+        return send_from_directory(f'../{path}', filename, as_attachment=True)
 
     except KeyError as d:
         flash(str(d), 'error')
@@ -468,7 +480,7 @@ def convert():
                         if sheet2value == sheet1value:
                             sheet1copyvalue = sheet2.cell(row=I, column=column1copy).value
                             if colourcells == 'colourcells2':
-                                sheet2.cell(row=E, column=column2copy).fill = colourFill
+                                sheet1.cell(row=E, column=column2copy).fill = colourFill
                             if keepdataoption == 'keepdata1':
                                 keepdatacell = sheet1.cell(row=E, column=column2copy).value
                                 keepdatacell = keepdatacell + sheet1copyvalue
@@ -528,7 +540,7 @@ def convert():
 
     #Exception catchers, just to be sure
     except KeyError as a:
-        flash(str(b), 'error')
+        flash(str(a), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
 

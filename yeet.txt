@@ -30,3 +30,13 @@ routes.py line 90
     #image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     #return render_template('index.html', title='Account', image_file=image_file, accountform=accountform, loginform=loginform, registerform=registerform)
     #return render_template('index.html', title='Account', accountform=accountform, loginform=loginform, registerform=registerform)
+
+
+                {%- if search.results_count == 0 -%}
+				<div class="SectionHeader__Description">
+					{%- assign filtered_terms = search.terms | replace: '*', '' -%}
+					{{- 'search.general.results_with_terms_count' | t: count: search.results_count, terms: filtered_terms -}}
+                 {%- else -%}
+                  	<p> No results found </p>
+				</div>
+                 {%- endif -%}
