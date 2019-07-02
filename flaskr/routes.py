@@ -166,7 +166,6 @@ def userfiles():
 @app.route('/files/<filename>', methods=['GET', 'POST'])
 def files(filename):
     try: 
-        #filename = session.get('filename')
         path = session.get('path')
         userfiles = session.get('userfiles[]')
 
@@ -196,21 +195,20 @@ def files(filename):
         session.pop('_flashes', None)
 
     except:
-        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        message = 'An error was detected, please try again'
         flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
 
-@app.route('/files2', methods=['GET', 'POST'])
+@app.route('/files/<filename>', methods=['GET', 'POST'])
 def files2():
     try: 
-        filename = session.get('filename')
         converteduserfiles = session.get('converteduserfiles[]')
         pathtoconverted = session.get('pathtoconverted')
 
         for index, filename in enumerate(converteduserfiles):
             print('yeet2')
-        return send_from_directory(f'../{pathtoconverted}', converteduserfiles[index], as_attachment=True)
+        return send_from_directory(f'../{pathtoconverted}', filename, as_attachment=True)
 
     except KeyError as d:
         flash(str(d), 'error')
@@ -236,7 +234,7 @@ def files2():
         session.pop('_flashes', None)
 
     except:
-        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        message = 'An error was detected, please try again'
         flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
@@ -313,7 +311,7 @@ def upload():
         session.pop('_flashes', None)
 
     except:
-        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        message = 'An error was detected, please try again'
         flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)
@@ -560,7 +558,7 @@ def convert():
         return render_template('index.html', error=error)
 
     except:
-        message = 'This is never supposed to happen, Please contact the administrator if it does'
+        message = 'An error was detected, please try again'
         flash(str(message), 'error')
         return redirect("/")
         return render_template('index.html', error=error)

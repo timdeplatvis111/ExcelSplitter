@@ -1,4 +1,5 @@
-body{
+body
+{
     overflow-x: hidden;
     background-color: #f8f9fa;
 }
@@ -38,30 +39,46 @@ body{
 
 .background 
 {
-    position: absolute;
-    display: block;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 1604px;
-    width: 1200px;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(2,0,36,1) 22%, rgba(63,9,121,1) 50%, rgba(255,255,255,1) 100%);
 }
 
 .fixforparticlesjs
 {
     z-index: 10;
-    border-right-style: solid;
-    border-right-width: 1px;
-    border-right-color: grey;
-
-    border-left-style: solid;
-    border-left-width: 1px;
-    border-left-color: grey;
 }
-
 
 .alert-message p
 {
     color: red;
+}
+
+::selection 
+{
+    background: rgb(107, 146, 255);
+    color: black;
+}
+
+.backgroundWrapper
+{
+    background: linear-gradient(180deg, rgba(2,0,36,1) 22%, rgba(63,9,121,1) 50%, rgba(255,255,255,1) 100%);
+    position: absolute;
+    box-sizing: inherit;
+    height: 100%;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+nav
+{
+    z-index: 20;
 }

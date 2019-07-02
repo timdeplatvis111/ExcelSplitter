@@ -25,6 +25,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
 -->
 
 <body>
+    <div class="backgroundWrapper">
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color: #2A3964;">
             <a class="navbar-brand" href="#"> 
@@ -45,6 +46,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
         </nav>
     </header>
     <!-- Login/register modal -->
+    
     <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -203,12 +205,12 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                                     <!--Moet loopen door de userfiles array en zo aparte links voor alle files generen-->
                                     <p> Your previously uploaded files:</p>
                                     {% for filename in userfiles %}
-                                        <h3><a class="mr-2 mt-4" href="{{url_for('files', filename=userfiles[loop.index0])}}" method="POST">{{ userfiles[loop.index0] }} </a></h3>
+                                        <a class="mr-2 mt-4" href="{{url_for('files', filename=userfiles[loop.index0])}}" method="POST">{{ userfiles[loop.index0] }} </a> <br>
                                     {% endfor %}
 
                                     <p> Your previously converted files: </p>
                                     {% for filename in converteduserfiles %}
-                                        <a href="{{ url_for('files2') }}"> {{ converteduserfiles[loop.index0] }} </a> <br> 
+                                        <a class="mr-2 mt-4" href="{{url_for('files2', filename=converteduserfiles[loop.index0])}}" method="POST">{{ converteduserfiles[loop.index0] }} </a> <br>
                                     {% endfor %}
                                     
                                 </div>
@@ -409,10 +411,11 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             </div>
         </div>
     </div> 
-<canvas class="background"></canvas>
+    <canvas class="background"></canvas>
+    </div>
 </body>
 <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 
 <script>
 
@@ -422,7 +425,7 @@ window.onload= function()
 	selector: '.background',
     color: ['#DA0463', '#404B69', '#DBEDF3'],
     connectParticles: true,
-    maxParticles: 200,
+    maxParticles: 300,
 })};
 
 </script>

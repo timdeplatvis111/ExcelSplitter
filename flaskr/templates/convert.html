@@ -22,6 +22,7 @@
 </head>
 
 <body>
+    <div class="backgroundWrapper">
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color: #2A3964;">
             <a class="navbar-brand" href="/"> 
@@ -122,10 +123,11 @@
         </div>
     </div>
     <canvas class="background"></canvas>
+    </div>
 </body>
 <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
 <script src="{{ url_for('static', filename='js/jscolor.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
 
 <script>
 
