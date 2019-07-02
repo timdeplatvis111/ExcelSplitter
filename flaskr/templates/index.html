@@ -33,13 +33,13 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             </a>
             {% if current_user.is_authenticated %}
             <div class="navbar-login ml-auto mr-4">
-                <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target="#accountModal">
+                <button type="button" class="btn btn-outline-primary float-right" data-toggle="modal" data-target="#accountModal">
                     {{ current_user.username }} </button>
                 <a class="nav-item nav-link float-right" href="{{ url_for('logout') }}">Logout</a>
             </div>
             {% else %}
             <div class="navbar-login ml-auto mr-4">
-                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#loginModal">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#loginModal">
                     Login/register here! </button>
             </div>
             {% endif %}
@@ -186,7 +186,7 @@ Also even de layour fixen, er zitten nu blank spaces op de page
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Account settings</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Files</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -200,7 +200,6 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                             </div>
                         </div>
                             <fieldset class="form-group">
-                                <legend class="border-bottom mb-4">Files</legend>
                                 <div class="form-group">
                                     <!--Moet loopen door de userfiles array en zo aparte links voor alle files generen-->
                                     <p> Your previously uploaded files:</p>
@@ -285,8 +284,9 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 {% if errorloops %}
                 <div class="alert-message block-message loops">
                     {%- for msg in errorloops %}
-                    <p> The program skipped over {{ msg }} iterations, this was most likely caused by merged cells. If you're trying to copy data from merged cells, please remove the merged cells first.
+                    <p> The program skipped over {{ msg }} iterations </p>
                     {% endfor -%}
+                    <p> Tip: Merged cells cannot be edited </p>
                 </div>
                 {% endif %}
                 {% endwith %}
@@ -309,8 +309,10 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 <div class="alert-message block-message error">
                     <p> An error occurded, the error message: </p>
                     {%- for msg in error %}
-                    <p> This value caused an error: {{ msg }}, this could be because the entered value was above the maximum allowed value. If this error persists, please ask the developer </p>
+                    <p> This value caused an error: {{ msg }} </p>
                     {% endfor -%}
+                    <br>
+                    <p> Tip: The entered value was most likely above the maximum allowed value. If this error persists, please ask the developer </p>
                 </div>
                 {% endif %}
                 {% endwith %}
@@ -323,7 +325,8 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                     {%- for msg in valueError %}
                     <p> Error {{ msg }} </p>
                     {% endfor -%}
-                    <p> This most likely means that you left one of the fields blank, or that the entered value was too high </p>
+                    <br>
+                    <p> Tip: This most likely means that you left one of the fields blank, or that the entered value was too high </p>
                 </div>
                 {% endif %}
                 {% endwith %}
@@ -396,12 +399,13 @@ Also even de layour fixen, er zitten nu blank spaces op de page
                 <article class="media content-section">
                 <!-- Codesave  line 12 -->
                   <div class="media-body">
-                    <div class="article-metadata">
+                    <div class="article-metadata"> 
                       <a class="mr-2" href="#">{{ post.author.username }}</a>
                       <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
                     </div>
                     <p class="article-title">{{ post.title }}</p>
                     <p class="article-content">{{ post.content }}</p>
+                    <hr>
                   </div>
                 </article>
                 {% endfor %}
@@ -425,7 +429,7 @@ window.onload= function()
 	selector: '.background',
     color: ['#DA0463', '#404B69', '#DBEDF3'],
     connectParticles: true,
-    maxParticles: 300,
+    maxParticles: 150,
 })};
 
 </script>
