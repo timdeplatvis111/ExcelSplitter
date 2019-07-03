@@ -2,7 +2,7 @@ import os, time, flask, string, MySQLdb, openpyxl, wtforms, jinja2
 
 from flask import Flask, Blueprint, render_template, request, redirect, url_for, flash, sessions, session, send_from_directory, send_file
 
-from flaskr import app, allowed_file, flask_bcrypt, db, bcrypt
+from flaskr import app, allowed_file, flask_bcrypt, db, bcrypt, models
 
 from os.path import join, dirname, realpath
 
@@ -26,7 +26,8 @@ from sqlalchemy import *
 a, b, c, d = '', '', '', ''
 
 @app.route('/', methods=['GET', 'POST'])
-def index():
+@app.route('/page/<int:page>', methods=['GET', 'POST'])
+def index(page=1):
     try:
         registerform = RegistrationForm()
         if registerform.validate_on_submit():
@@ -59,7 +60,7 @@ def index():
                 login_user(user, remember=loginform.remember.data)
                 #next_page = request.args.get('next')
                 #return redirect(next_page) if next_page else redirect(url_for('index'))
-                return redirect(url_for('index'))
+                return redirect(url_for('/'))
             else:
                 message = 'Invalid login, please check your login values and try again'
                 flash(str(message), 'loginError')
@@ -113,13 +114,20 @@ def index():
             db.session.commit()
             flash('Your post has been created!', 'success')
             return redirect(url_for('index'))
-    
-        posts = Post.query.all()
+
+        RESULTS_PER_PAGE = 5
+        #posts = Post.query.all()
+        #models.Post.query.paginate(page, per_page, error_out=False)
+        #posts = Post.query.order_by(Post.id.title()).paginate(page,per_page,error_out=False)
+        posts = models.Post.query.paginate(page, RESULTS_PER_PAGE, False)
+        num = int(ceil(float(posts.total) / RESULTS_PER_PAGE)) + 1
 
         environment = jinja2.Environment(os)
         environment.filters['os'] = os
 
-        return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
+        #{% for post in posts|sort(attribute='date_posted', reverse=true) %}
+
+        return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, number_of_pages=num, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
 
     #All exception catchers, most of these will never happen but they're there just to be sure.
     except KeyError as a:
