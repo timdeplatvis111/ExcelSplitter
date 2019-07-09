@@ -131,8 +131,9 @@ def index(page=1):
 
     #All exception catchers, most of these will never happen but they're there just to be sure.
     except KeyError as a:
+        flash(str(a), 'error')
         return redirect("/")
-        return render_template('index.html')
+        return render_template('index.html', error=error)
         session.pop('_flashes', None)
 
     except NameError as b:
@@ -154,10 +155,11 @@ def index(page=1):
         session.pop('_flashes', None)
 
     except:
-        message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
-        flash(str(message), 'error')
+        #message = 'You broke my webapp somehow, if this is a recurring error then please contact the developer'
+        #flash(str(message), 'error')
         return redirect("/")
-        return render_template('index.html', error=error)
+        #return render_template('index.html', error=error)
+        return render_template('index.html')
         session.pop('_flashes', None)
 """
 @app.route(, methods=['GET', 'POST'])
@@ -208,14 +210,12 @@ def files(filename):
         return redirect("/")
         return render_template('index.html', error=error)
 
-@app.route('/files/<filename>', methods=['GET', 'POST'])
-def files2():
+@app.route('/files/converted/<filename>', methods=['GET', 'POST'])
+def files2(filename):
     try: 
-        converteduserfiles = session.get('converteduserfiles[]')
         pathtoconverted = session.get('pathtoconverted')
+        converteduserfiles = session.get('converteduserfiles[]')
 
-        for index, filename in enumerate(converteduserfiles):
-            print('yeet2')
         return send_from_directory(f'../{pathtoconverted}', filename, as_attachment=True)
 
     except KeyError as d:
@@ -439,9 +439,13 @@ def convert():
                                 sheet2.cell(row=E, column=column2copy).fill = colourFill
                             if keepdataoption == 'keepdata1':
                                 keepdatacell = sheet2.cell(row=E, column=column2copy).value
-                                keepdatacell = keepdatacell + sheet1copyvalue
-                                sheet2.cell(row=E, column=column2copy, value=keepdatacell)
-                                loops +=1
+                                try:
+                                    keepdatacell = keepdatacell + sheet1copyvalue
+                                    sheet2.cell(row=E, column=column2copy, value=keepdatacell)
+                                    loops +=1
+                                except: 
+                                    sheet2.cell(row=E, column=column2copy, value=sheet1copyvalue)
+                                    loops +=1
                             else:
                                 sheet2.cell(row=E, column=column2copy, value=sheet1copyvalue)
                                 loops +=1
@@ -489,9 +493,13 @@ def convert():
                                 sheet1.cell(row=E, column=column2copy).fill = colourFill
                             if keepdataoption == 'keepdata1':
                                 keepdatacell = sheet1.cell(row=E, column=column2copy).value
-                                keepdatacell = keepdatacell + sheet1copyvalue
-                                sheet1.cell(row=E, column=column2copy, value=keepdatacell)
-                                loops +=1
+                                try:
+                                    keepdatacell = keepdatacell + sheet1copyvalue
+                                    sheet1.cell(row=E, column=column2copy, value=keepdatacell)
+                                    loops +=1
+                                except:
+                                    sheet1.cell(row=E, column=column2copy, value=sheet1copyvalue)
+                                    loops +=1
                             else:
                                 sheet1.cell(row=E, column=column2copy, value=sheet1copyvalue)
                                 loops +=1
