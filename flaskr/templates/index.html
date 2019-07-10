@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> Excel tool </title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"> </script>
+
+</head>
+
+<!-- TODO: het templating systeem laten werken met de 'extend' functie, om deze header automatisch gelijk te houden vanuit een base template 
+Also even de layour fixen, er zitten nu blank spaces op de page
+-->
+
+<body>
+    <div class="backgroundWrapper">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color:hsla(224, 41%, 28%, 0.664);">
+            <a class="navbar-brand" href="#"> 
+                <img src="../static/images/logo.png">
+            </a>
+            {% if current_user.is_authenticated %}
+            <div class="navbar-login ml-auto mr-4">
+                <button type="button" class="btn btn-outline-primary float-right" data-toggle="modal" data-target="#accountModal">
+                    {{ current_user.username }} </button>
+                <a class="nav-item nav-link float-right" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+            {% else %}
+            <div class="navbar-login ml-auto mr-4">
+                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#loginModal">
+                    Login/register here! </button>
+            </div>
+            {% endif %}
+        </nav>
+    </header>
+    <!-- Login/register modal -->
+    
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Register</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item active"><a class="nav-link active" href="#tab1"
+                                    data-toggle="tab">Register</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Login</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+                                <div class="content-section">
+                                    <form method="POST" action="">
+                                        {{ registerform.hidden_tag() }}
+                                        <fieldset class="form-group">
+                                            <div class="form-group">
+                                                {{ registerform.username.label(class="form-control-label") }}
+                                                {% if registerform.username.errors %}
+                                                {{ registerform.username(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in registerform.username.errors %}
+                                                    <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                {{ registerform.username(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ registerform.email.label(class="form-control-label") }}
+                                                {% if registerform.email.errors %}
+                                                {{ registerform.email(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in registerform.email.errors %}
+                                                    <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                {{ registerform.email(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ registerform.password.label(class="form-control-label") }}
+                                                {% if registerform.password.errors %}
+                                                {{ registerform.password(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in registerform.password.errors %}
+                                                    <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                {{ registerform.password(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ registerform.confirm_password.label(class="form-control-label") }}
+                                                {% if registerform.confirm_password.errors %}
+                                                {{ registerform.confirm_password(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in registerform.confirm_password.errors %}
+                                                    <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                {{ registerform.confirm_password(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                        </fieldset>
+                                        <div class="form-group">
+                                            {{ registerform.submit(class="btn btn-outline-info") }}
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab2">
+                                <div class="content-section">
+                                    <form method="POST" action="">
+                                        {{ loginform.hidden_tag() }}
+                                        <fieldset class="form-group">
+                                            <div class="form-group">
+                                                {{ loginform.email.label(class="form-control-label") }}
+                                                {% if loginform.email.errors %}
+                                                {{ loginform.email(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in loginform.email.errors %}
+                                                    <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                {{ loginform.email(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                {{ loginform.password.label(class="form-control-label") }}
+                                                {% if loginform.password.errors %}
+                                                {{ loginform.password(class="form-control form-control-lg is-invalid") }}
+                                                <div class="invalid-feedback">
+                                                    {% for error in loginform.password.errors %}
+                                                    <span>{{ error }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% else %}
+                                                {{ loginform.password(class="form-control form-control-lg") }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-check">
+                                            </div>
+                                        </fieldset>
+                                        <div class="form-group">
+                                            {{ loginform.submit(class="btn btn-outline-info") }}
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Files</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% if current_user.is_authenticated %}
+                    <div class="content-section">
+                        <div class="media">
+                            <img class="rounded-circle account-img" src="{{ image_file }}">
+                            <div class="media-body">
+                            </div>
+                        </div>
+                            <fieldset class="form-group">
+                                <div class="form-group">
+                                    <!--Moet loopen door de userfiles array en zo aparte links voor alle files generen-->
+                                    <p> Your previously uploaded files:</p>
+                                    {% for filename in userfiles %}
+                                        <a class="mr-2 mt-4" href="{{url_for('files', filename=userfiles[loop.index0])}}" method="POST">{{ userfiles[loop.index0] }} </a> <br>
+                                    {% endfor %}
+
+                                    <p> Your previously converted files: </p>
+                                    {% for filename in converteduserfiles %}
+                                        <a class="mr-2 mt-4" href="{{url_for('files2', filename=converteduserfiles[loop.index0])}}" method="POST">{{ converteduserfiles[loop.index0] }} </a> <br>
+                                    {% endfor %}
+                                    
+                                </div>
+                                <!-- Codesave line 15, index.html line 236 -->
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
+                {% if current_user.is_authenticated %}
+                <p> Currently only .xlsx files are supported </p>
+                <form class="form-horizontal" method="POST" role="form" enctype="multipart/form-data" action="/upload">
+                    <input type="file" name="uploadedfile1" class="btn btn-link">
+                    <input type="file" name="uploadedfile2" class="btn btn-link">
+                    <input type="submit" class="btn btn-primary" value="Upload">
+                </form>
+                {% else %}
+                <p> Please login first to gain acces to this webapp </p>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
+                <!-- Voor de time message -->
+                {% with time = get_flashed_messages(category_filter=["time"]) %}
+                {% if time %}
+                <div class="alert-message block-message time">
+                    {%- for msg in time %}
+                    <p> The program took: {{ msg }} seconds to complete this request</p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de register message -->
+                {% with succes = get_flashed_messages(category_filter=["succes"]) %}
+                {% if succes %}
+                <div class="alert-message block-message loops">
+                    {%- for msg in succes %}
+                    <p> The program went through {{ msg }} iterations </p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de loops message -->
+                {% with loops = get_flashed_messages(category_filter=["loops"]) %}
+                {% if loops %}
+                <div class="alert-message block-message loops">
+                    {%- for msg in loops %}
+                    <p> The program went through {{ msg }} iterations </p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de errorloops message -->
+                {% with errorloops = get_flashed_messages(category_filter=["errorloops"]) %}
+                {% if errorloops %}
+                <div class="alert-message block-message loops">
+                    {%- for msg in errorloops %}
+                    <p> The program skipped over {{ msg }} iterations </p>
+                    {% endfor -%}
+                    <p> Tip: Merged cells cannot be edited </p>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de invalid file messages-->
+                {% with fileerror = get_flashed_messages(category_filter=["fileerror"]) %}
+                {% if fileerror %}
+                <div class="alert-message block-message error">
+                    <p> An error occurded, the error message as generated by Python: </p>
+                    {%- for msg in fileerror %}
+                    <p> Please upload a .xlsx file, other Excel filetypes are not currently supported </p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de general error messages-->
+                {% with error = get_flashed_messages(category_filter=["error"]) %}
+                {% if error %}
+                <div class="alert-message block-message error">
+                    <p> An error occurded, the error message: </p>
+                    {%- for msg in error %}
+                    <p> This value caused an error: {{ msg }} </p>
+                    {% endfor -%}
+                    <br>
+                    <p> Tip: The entered value was most likely above the maximum allowed value. If this error persists, please ask the developer </p>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de value error messages, dus als er niets wordt ingevuld-->
+                {% with valueError = get_flashed_messages(category_filter=["valueError"]) %}
+                {% if valueError %}
+                <div class="alert-message block-message error">
+                    <p> An error occurded, the error message: </p>
+                    {%- for msg in valueError %}
+                    <p> Error {{ msg }} </p>
+                    {% endfor -%}
+                    <br>
+                    <p> Tip: This most likely means that you left one of the fields blank, or that the entered value was too high </p>
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Voor de invalid login messages-->
+                {% with loginError = get_flashed_messages(category_filter=["loginError"]) %}
+                {% if loginError %}
+                <div class="alert-message block-message error">
+                    <p> An error occurded, the error message: </p>
+                    {%- for msg in loginError %}
+                    <p> Error {{ msg }} </p>
+                    {% endfor -%}
+                </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 fixforparticlesjs border-bottom">
+                <div class="content-section">
+                    {% if current_user.is_authenticated %}
+                    <p> This comment section is for providing meaningfull feedback, if you want to see a function added you can comment here </p>
+                    <p> You can also leave suggestions for new tasks you think can be automated </p>
+                    <form method="POST" action="">
+                        {{ postform.hidden_tag() }}
+                        <fieldset class="form-group">
+                            <legend class="border-bottom mb-4">{{ legend }}</legend>
+                            <div class="form-group">
+                                {{ postform.title.label(class="form-control-label") }}
+                                {% if postform.title.errors %}
+                                {{ postform.title(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in postform.title.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ postform.title(class="form-control form-control-lg") }}
+                                <div id="output"></div>
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                {{ postform.content.label(class="form-control-label") }}
+                                {% if postform.content.errors %}
+                                {{ postform.content(class="form-control form-control-lg is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in postform.content.errors %}
+                                    <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                {{ postform.content(class="form-control form-control-lg") }}
+                                {% endif %}
+                            </div>
+                        </fieldset>
+                        <div class="form-group">
+                            {{ postform.submit(class="btn btn-outline-info") }}
+                        </div>
+                    </form>
+                    {% else %}
+                    <p> Please login first to provide feedback!</p>
+                    {% endif %}
+                </div>
+
+                {% for post in posts.items %}
+                <article class="media content-section">
+                <!-- Codesave  line 12 -->
+                  <div class="media-body">
+                    <div class="article-metadata"> 
+                        <a class="mr-2" href="#">{{ post.author.username }}</a>
+                        <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                    <p class="article-title">{{ post.title }}</p>
+                    <p class="article-content">{{ post.content }}</p>
+                    <hr>
+                  </div>
+                </article>
+                {% endfor %}
+                {% if posts.has_next %}
+                    <button type="button" class="btn btn-outline-primary"> <a href="{{ url_for('index', page=posts.next_num) }}"> Next page </button> </a>
+                {% endif %}
+                {% if posts.has_prev %}
+                    <button type="button" class="btn btn-outline-primary"> <a href="{{ url_for('index', page=posts.prev_num) }}"> Previous page </button> </a>
+                {% endif %}
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5">
+            </div>
+        </div>
+    </div> 
+    <canvas class="background"></canvas>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+
+<script>
+
+window.onload= function() 
+{
+    var particles = Particles.init({
+	selector: '.background',
+    color: ['#DA0463', '#404B69', '#DBEDF3'],
+    connectParticles: true,
+    maxParticles: 150,
+})};
+
+</script>
+
+
+
+</html>

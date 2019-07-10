@@ -1,0 +1,89 @@
+<!-- Codesave line 1-->
+<div class="form-group">
+{{ accountform.picture.label() }}
+{{ accountform.picture(class="form-control-file") }}
+{% if accountform.picture.errors %}
+{% for error in accountform.picture.errors %}
+<span class="text-danger">{{ error }}</span></br>
+{% endfor %}
+{% endif %}
+</div>
+
+<!-- Codesave  line 12 -->
+<img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+
+<div class="form-group">
+<p> Files uploaded by you: </p>
+{% for file in os.listdir("../../files/{current_user.username}") %}
+url = path.abspath(path.join({{ current_user.username }} ,"../.."))
+<a href="{{ url_for('static', filename='url /%s' % (y)) }}">{{current_user.namename}} </a>
+{% endfor %}
+</div>
+
+                <!-- Codesave line 197 
+                <div class="modal-body">
+                    {% if current_user.is_authenticated %}
+                    <div class="content-section">
+                        <div class="media">
+                            <img class="rounded-circle account-img" src="{{ image_file }}">
+                            <div class="media-body">
+                                <h2 class="account-heading">{{ current_user.username }}</h2>
+                                <p class="text-secondary">{{ current_user.email }}</p>
+                            </div>
+                        </div>
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            {{ accountform.hidden_tag() }}
+                            <fieldset class="form-group">
+                                <legend class="border-bottom mb-4">Account Info</legend>
+                                <div class="form-group">
+                                    {{ accountform.username.label(class="form-control-label") }}
+
+                                    {% if accountform.username.errors %}
+                                    {{ accountform.username(class="form-control form-control-lg is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in accountform.username.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    {{ accountform.username(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                <div class="form-group">
+                                    {{ accountform.email.label(class="form-control-label") }}
+                                    <p> When updating your account email and username the folder containing your previously uploaded files 
+                                    NOT be saved, please keep this in mind
+                                    </p>
+                                    Moet loopen door de userfiles array en zo aparte links voor alle files generen
+                                    <p> Your previously uploaded files:</p>
+                                    {% for filename in userfiles %}
+                                        <a href="{{ url_for('files') }}"> {{ userfiles[loop.index0] }} </a> <br> 
+                                    {% endfor %}
+
+                                    <p> Your previously converted files: </p>
+                                    {% for filename in converteduserfiles %}
+                                        <a href="{{ url_for('files2') }}"> {{ converteduserfiles[loop.index0] }} </a> <br> 
+                                    {% endfor %}
+
+                                    {% if accountform.email.errors %}
+                                    {{ accountform.email(class="form-control form-control-lg is-invalid") }}
+                                    
+                                    <div class="invalid-feedback">
+                                        {% for error in accountform.email.errors %}
+                                        <span>{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    {{ accountform.email(class="form-control form-control-lg") }}
+                                    {% endif %}
+                                </div>
+                                Codesave line 15, index.html line 236 
+                            </fieldset>
+                            <div class="form-group">
+                                {{ accountform.submit(class="btn btn-outline-info") }}
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+                </div>
+                -->

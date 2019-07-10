@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> Converting </title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet"> 
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+
+</head>
+
+<body>
+    <div class="backgroundWrapper">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color: #2A3964;">
+            <a class="navbar-brand" href="/"> 
+                <img src="../static/images/logo.png">
+            </a>
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+            </div>
+            <a class="nav-item float-right" data-toggle="modal" data-target="loginregistermodal"> </a>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
+                <form class="form-horizontal" id="dingetje" method="POST" role="form" enctype="multipart/form-data" action="/convert">
+                    <p> This is a very early development version, the program can currently only match values that are
+                        exactly alike for example the K numbers </p>
+
+                    <div class="form-group">
+                        <label class="float-left"> I want to match the values from the given column number in file:
+                            {{ filenamen[0] }} </label>
+                        <input type="number" name="column1" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="float-left"> I want to match the values from the given column number in file:
+                            {{ filenamen[1] }} </label>
+                        <input type="number" name="column2" class="form-control">
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <label class="float-left"> I want match the numbers or letters from position
+                            Leave this BLANK if you just wanna match the entire value:
+                        </label>
+                        <input type="number" name="partcolumn1" class="form-control" id="partcolumn1">
+                    </div>
+                    <div class="form-group">
+                        <label class="float-left"> I want to match the numers or letters to position:  </label>
+                        <input type="number" name="partcolumn2" class="form-control">
+                        <p> Example: entering 0 in the first field, and 5 in the second field would result in this:
+                        <p> <span class="red">K19070</span>20006 </p>
+                        <p> Entering 2 to 7 would result in this: </p>
+                        <p> K1<span class="red">907020</span>31 </p>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <div class="radiobuttons">
+                            <label> I want to copy the data from: </label>
+                            <div class="radiobutton"> <input type="radio" name="option" id="option1" value="file0" checked
+                                    class="form-check-input radio"> {{ filenamen[0] }} </input> </div>
+                            <div class="radiobutton"> <input type="radio" name="option" id="option2" value="file1"
+                                    class="form-check-input radio"> {{ filenamen[1] }} </input> </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="float-left"> I want to copy the values from column: </label>
+                        <input type="number" name="column1copy" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="float-left"> To column: </label>
+                        <input type="number" name="column2copy" class="form-control">
+                    
+                    <hr> 
+
+                        <div class="radiobutton mt-3"> <input type="radio" name="keepdataoption" id="keepdata1" value="keepdata1" checked
+                            class="form-check-input radio"> I want to keep the original data, add the copied values after the original data, this'll ensure the original values in the cells won't be overriden. </div>
+                        <div class="radiobutton mt-3"> <input type="radio" name="keepdataoption" id="keepdata2" value="keepdata2"  
+                            class="form-check-input radio"> I want to override the original values </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <div class="radiobutton mt-3"> <input type="radio" name="colourcells" id="colourcells1" value="colourcells1" checked
+                            class="form-check-input radio"> Keep the original colour </div>
+                        
+                        <div class="radiobutton mt-3"> <input type="radio" name="colourcells" id="colourcells2" value="colourcells2"
+                            class="form-check-input radio"> Fill in the copied data with a color </div>
+
+                        <input name="color1" type="hidden" id="color_value" value="283150">
+                        <button class="jscolor {valueElement: 'color_value'} btn btm-secondary mt-4">Pick a color</button>
+                        
+                    </div>
+                    <input type="submit" class="btn btn-primary float-left" value="Submit">
+                    <button class="btn btn-outline-primary float-left">  <a href="/">Go back </a> </button>
+
+                </form>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+        </div>
+    </div>
+    <canvas class="background"></canvas>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/jscolor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+
+<script>
+
+window.onload= function() 
+{
+    var particles = Particles.init({
+	selector: '.background',
+    color: ['#DA0463', '#404B69', '#DBEDF3'],
+    connectParticles: true,
+    maxParticles: 150,
+})};
+
+</script>
+
+</html>

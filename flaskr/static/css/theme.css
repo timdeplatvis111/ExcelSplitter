@@ -1,0 +1,104 @@
+body
+{
+    overflow-x: hidden;
+    background-color: #f8f9fa;
+}
+
+::-webkit-scrollbar 
+{ 
+    display: none; 
+}
+
+.radiobuttons
+{
+  height: 5em;
+  width: 100%;
+}
+
+.radiobutton
+{
+  width: 100%;
+  height: 40%;
+  padding-left: 3.5%;
+}
+
+.form-group label
+{
+  width: 100%;
+}
+
+.navbar-brand img
+{
+    max-width: 250px;
+}
+
+.yeet 
+{
+    display: none;
+}
+
+.red
+{
+    color: red;
+}
+
+.background 
+{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(2,0,36,1) 22%, rgba(63,9,121,1) 50%, rgba(255,255,255,1) 100%); 
+}
+
+.fixforparticlesjs
+{
+    z-index: 10;
+}
+
+::selection 
+{
+    background: rgb(107, 146, 255);
+    color: black;
+}
+
+.backgroundWrapper
+{
+    /* background: linear-gradient(180deg, rgba(2,0,36,1) 22%, rgba(63,9,121,1) 50%, rgba(255,255,255,1) 100%); */
+    background: linear-gradient(180deg, rgba(42,57,100,1) 0%, rgba(74,29,122,1) 39%, rgba(255,255,255,1) 100%);
+    position: absolute;
+    box-sizing: inherit;
+    height: 100%;
+    width: 100%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+nav
+{
+    z-index: 20;
+}
+
+.pagination-page-info 
+{
+    padding: .6em;
+    padding-left: 0;
+    width: 40em;
+    margin: .5em;
+    margin-left: 0;
+    font-size: 12px;
+}
+
+.pagination-page-info b 
+{
+    color: black;
+    background: #6aa6ed;
+    padding-left: 2px;
+    padding: .1em .25em;
+    font-size: 150%;
+}
