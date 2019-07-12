@@ -1,0 +1,21 @@
+# the git command (may have to specify "/usr/bin/git" for example)
+git: git
+
+# the temp directory that sync will use for cloning
+tmp: tmp-sync
+
+# set to true to stop subsequent cloning upon failing to clone any repository 
+abort-on-failure: false
+
+# the list of repositories to clone, in the order provided
+repositories:
+
+# this will clone the specified repo with the branch dev into the working directory
+- url: https://github.com/timdeplatvis111/ExcelSplitter.git
+  branch: master
+  target: ./
+
+# this will clone the specified repo with the branch dev into ./repo2-copy
+- url: git@github.com:thekeenant/repo2.git
+  branch: dev
+  target: ./repo2-copy
