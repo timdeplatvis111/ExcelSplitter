@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> Converting </title>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet"> 
+    <link href="{{ url_for('static', filename='css/theme.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/bootstrap.js') }}"> </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+
+</head>
+
+<body>
+    <div class="backgroundWrapper">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark fixforparticlesjs" style="background-color: #2A3964;">
+            <a class="navbar-brand" href="/"> 
+                <img src="../static/images/logo.png">
+            </a>
+            <div class="collapse navbar-collapse" id="collapsibleNavId">
+            </div>
+            <a class="nav-item float-right" data-toggle="modal" data-target="loginregistermodal"> </a>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding fixforparticlesjs">
+                <form class="form-horizontal" id="dingetje" method="POST" role="form" enctype="multipart/form-data" action="/brconvert">
+                    <p> This is a very early development version, the program can currently only match values that are
+                        exactly alike for example the K numbers </p>
+
+                    <div class="form-group">
+                        <label class="float-left"> I want to insert the br tags into the following column: </label>
+                        <input type="number" name="column1" class="form-control">
+                    </div>
+
+                    <hr>
+
+                    <input type="submit" class="btn btn-primary float-left" value="Submit">
+                    <button class="btn btn-outline-primary float-left">  <a href="/">Go back </a> </button>
+
+                </form>
+            </div>
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 bg-light pt-5 no-padding">
+            </div>
+        </div>
+    </div>
+    <canvas class="background"></canvas>
+    </div>
+</body>
+<script src="{{ url_for('static', filename='js/index.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/jscolor.js') }}"></script>
+<script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+
+<script>
+
+window.onload= function() 
+{
+    var particles = Particles.init({
+	selector: '.background',
+    color: ['#DA0463', '#404B69', '#DBEDF3'],
+    connectParticles: true,
+    maxParticles: 150,
+})};
+
+</script>
+
+</html>

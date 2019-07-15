@@ -22,6 +22,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_sqlalchemy import *
 from sqlalchemy import *
 
+from string import ascii_lowercase
+import itertools
+
 #For the exception catchers, for some reason they need a value first.
 a, b, c, d = '', '', '', ''
 
@@ -262,7 +265,6 @@ def upload():
         userfolder = current_user.username
 
         #Creates a list from the files so we can loop through them later
-        #yeet = request.files.getlist('uploadedfiles')
         yeet1 = request.files.getlist('uploadedfile1')
         yeet2 = request.files.getlist('uploadedfile2')
 
@@ -324,12 +326,154 @@ def upload():
         return redirect("/")
         return render_template('index.html', error=error)
 
+@app.route('/brupload', methods=['POST', 'GET'])
+def brupload():
+    try: 
+        request.files['bruploadedfile']
+        userfolder = current_user.username
+
+        yeet4 = request.files.getlist('bruploadedfile')
+
+        brfilenamen = []
+
+        for file in yeet4:
+            files = request.files.to_dict()
+            filename = secure_filename(file.filename)
+            brfilenamen.append(filename)
+
+            print(brfilenamen[0])
+
+            #Checks if the uploaded file is an .xlxs file
+            if file and allowed_file(filename):
+                if (os.path.exists(f'files/{userfolder}/br')):
+                    file.save(f'files/{userfolder}/br/{filename}')
+                else:
+                    os.makedirs(f'files/{userfolder}/br')
+                    file.save(f'files/{userfolder}/br/{filename}')
+            else:
+                fileerror= 'fuck'
+                flash('yeet', 'fileerror')
+                return render_template('index.html', fileerror=fileerror)
+
+        session['brfilenamen[]'] = brfilenamen
+        return render_template('brconvert.html', brfilenamen=session['brfilenamen[]'])  
+
+    except KeyError as d:
+        flash(str(d), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except:
+        message = 'An error was detected, please try again'
+        flash(str(message), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+
+@app.route('/brconvert', methods=['GET', 'POST'])
+def brconvert():
+    try:
+        def iter_all_strings():
+            for size in itertools.count(1):
+                for letter in itertools.product(ascii_lowercase, repeat=size):
+                    yield "".join(letter)
+
+        values = dict()
+        randomindex = 0
+
+        for letter in itertools.islice(iter_all_strings(), 30):
+            randomindex +=1
+            values[randomindex] = letter
+
+        userfolder = current_user.username
+        
+        brfilenamen = session.get('brfilenamen[]')
+
+        filenaam1 = brfilenamen[0]
+
+        print(brfilenamen[0])
+
+        workbook1 = load_workbook(filename=(f"files/{userfolder}/br/{filenaam1}"))
+        sheet1 = workbook1.active
+
+        column1 = request.form['column1']
+
+        column1 = int(column1)
+
+        sheet1column = values[column1]
+
+        br = '<br> '
+        closebr = ' <br />'
+
+        for cell in sheet1[sheet1column]:
+            I = cell.row
+            brplacedata = sheet1.cell(row=I, column=column1).value
+            brplacedata = br + brplacedata + closebr
+            sheet1.cell(row=I, column=column1, value=brplacedata)
+        
+        workbook1.save(f'files/{userfolder}/{filenaam1}')
+
+        return send_from_directory(f'../files/{userfolder}', filenaam1, as_attachment=True)
+
+    except KeyError as d:
+        flash(str(d), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+
+    except NameError as b:
+        flash(str(b), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except ValueError as c:
+        flash(str(c), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except TypeError as f:
+        flash(str(f), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+        session.pop('_flashes', None)
+
+    except:
+        message = 'An error was detected, please try again'
+        flash(str(message), 'error')
+        return redirect("/")
+        return render_template('index.html', error=error)
+
 @app.route('/convert', methods=['GET', 'POST'])
 def convert():
     try:
+        def iter_all_strings():
+            for size in itertools.count(1):
+                for letter in itertools.product(ascii_lowercase, repeat=size):
+                    yield "".join(letter)
+
         values = dict()
-        for index, letter in enumerate(string.ascii_lowercase):
-            values[index] = letter
+        randomindex = 0
+        for letter in itertools.islice(iter_all_strings(), 30):
+            randomindex +=1
+            values[randomindex] = letter
 
         #Sets the userfolder equal to the logged in user's username.
         userfolder = current_user.username
@@ -403,7 +547,7 @@ def convert():
         loops = 0
         errorloops = 0
 
-        #This if can definitely be removed somehow, writing this code twice is really inefficient. 
+        #This if statement can definitely be removed somehow, writing this code twice is really inefficient. 
         if option == 'file0':
             filename =  filenaam1
 
@@ -579,5 +723,5 @@ def convert():
         return redirect("/")
         return render_template('index.html', error=error)
 
-    session.pop('_flashes', None) 
+        session.pop('_flashes', None) 
 
