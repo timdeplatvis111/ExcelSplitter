@@ -31,6 +31,12 @@ Also even de layour fixen, er zitten nu blank spaces op de page
             <a class="navbar-brand" href="#"> 
                 <img src="../static/images/logo.png">
             </a>
+            {% if uptodate == 'true' %}
+                <p class="red"> Current version is up to date </p>
+            {% elif uptodate == 'false' %}
+                <p class="red"> Current version is not up to date, please get the latest release from <a href="https://github.com/timdeplatvis111/ExcelSplitter/releases"> Github </a></p>
+            {% endif %}
+
             {% if current_user.is_authenticated %}
             <div class="navbar-login ml-auto mr-4">
                 <button type="button" class="btn btn-outline-primary float-right" data-toggle="modal" data-target="#accountModal">

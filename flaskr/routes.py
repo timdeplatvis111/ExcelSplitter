@@ -22,8 +22,14 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flask_sqlalchemy import *
 from sqlalchemy import *
 
+from github import Github
+
 from string import ascii_lowercase
 import itertools
+
+#Github configuration, for automatic update checking.
+
+g = Github("timdeplatvis111", "prU3fgGy4MtJfmz")
 
 #For the exception catchers, for some reason they need a value first.
 a, b, c, d = '', '', '', ''
@@ -130,7 +136,18 @@ def index(page=1):
 
         #{% for post in posts|sort(attribute='date_posted', reverse=true) %}
 
-        return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, number_of_pages=num, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os)
+        currentVersion = "Excelsplitter version 1.0"
+
+        repo = g.get_repo("timdeplatvis111/ExcelSplitter")
+        print(repo.name)
+        #repo.compare
+        latestRelease = repo.get_latest_release()
+        if latestRelease.title == currentVersion:
+            uptodate = 'true'
+        else:
+            uptodate = 'false'
+
+        return render_template('index.html', title='Account', loginform=loginform, registerform=registerform, postform=postform, posts=posts, number_of_pages=num, userfiles=session['userfiles[]'], path=session['path'], filename=session['filename'], pathtoconverted=session['pathtoconverted'], converteduserfiles=session['converteduserfiles[]'], os=os, uptodate=uptodate)
 
     #All exception catchers, most of these will never happen but they're there just to be sure.
     except KeyError as a:
