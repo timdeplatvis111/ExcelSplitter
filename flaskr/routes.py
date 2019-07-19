@@ -140,7 +140,8 @@ def index(page=1):
 
         #{% for post in posts|sort(attribute='date_posted', reverse=true) %}
 
-        currentVersion = "Excelsplitter version 1.0"
+        #VERGEET DIT NIET TE VERANDEREN IN BETWEEN RELEASES TIM
+        currentVersion = "Excelsplitter version 1.0.2"
 
         repo = g.get_repo("timdeplatvis111/ExcelSplitter")
         print(repo.name)
