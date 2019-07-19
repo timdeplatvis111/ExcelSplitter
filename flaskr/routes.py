@@ -28,8 +28,12 @@ from string import ascii_lowercase
 import itertools
 
 #Github configuration, for automatic update checking.
+f = open("githublogin.txt", "r")
+for x in f:
+    username = f.readline()
+    password = f.readline()
 
-g = Github("timdeplatvis111", "prU3fgGy4MtJfmz")
+g = Github(username, password)
 
 #For the exception catchers, for some reason they need a value first.
 a, b, c, d = '', '', '', ''
