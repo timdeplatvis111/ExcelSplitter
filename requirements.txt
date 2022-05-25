@@ -47,7 +47,7 @@ ptvsd==4.2.10
 pyaml==19.4.1
 pycparser==2.19
 PyGithub==1.43.7
-PyJWT==1.7.1
+PyJWT==2.4.0
 pylint==2.2.2
 python-dateutil==2.7.5
 python-dotenv==0.10.1
